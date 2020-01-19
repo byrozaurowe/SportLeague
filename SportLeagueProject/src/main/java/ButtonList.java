@@ -3,14 +3,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ButtonList extends JFrame implements ActionListener {
-    String rodzaj;
+    String type;
     JPanel buttonPane;
+    List buttonPaneContentList;
 
-    public ButtonList(String rodzaj) {
-        this.rodzaj = rodzaj;
+    public ButtonList(String type) {
+        this.type = type;
 
         setVisible(true);
         setTitle("Ultimate Frisbee League");
@@ -18,15 +20,22 @@ public class ButtonList extends JFrame implements ActionListener {
         Font font = new Font ("Segoe UI", Font.PLAIN, 20);
 
         buttonPane = new JPanel();
-        List teamNameList = DatabaseApplication.queries("getTeams");
-        int listSize = teamNameList.size();
+        if (this.type == "Drużyny") {
+            buttonPaneContentList = DatabaseApplication.queries("getTeams");
+        }
+        int listSize = buttonPaneContentList.size();
         buttonPane.setLayout(new GridLayout(listSize, 1));
-        JButton[] teamButtonTable = new JButton[];
-        for (int i=0; i<teamNameList.size(); i++) {
-            teamButtonTable[i].setText(teamNameList.get(i));
-
+        JButton[] teamButtonTable = new JButton[listSize];
+        for (int i=0; i<listSize; i++) {
+            String text = buttonPaneContentList.get(1).toString();
+            teamButtonTable[i].setText(text);
+            buttonPane.add(teamButtonTable[i]);
+            teamButtonTable[i].addActionListener(this);
+            teamButtonTable[i].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            teamButtonTable[i].setFont(font);
         }
 
+        add(buttonPane);
         pack();
     }
 
