@@ -10,6 +10,6 @@
         <property name="hibernate.connection.password">1234</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <mapping class="Drużyna" resource="Drużyna.hbm.xml"/>
+        <mapping class="Drużyna" resource="Team.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
