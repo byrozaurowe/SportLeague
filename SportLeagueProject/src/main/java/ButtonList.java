@@ -21,14 +21,14 @@ public class ButtonList extends JFrame implements ActionListener {
 
         buttonPane = new JPanel();
         if (this.type == "Drużyny") {
-            buttonPaneContentList = DatabaseApplication.queries("getTeams");
+            buttonPaneContentList = DatabaseApplication.queries(new String[] {"getTeams"});
         }
         int listSize = buttonPaneContentList.size();
         buttonPane.setLayout(new GridLayout(listSize, 1));
         JButton[] teamButtonTable = new JButton[listSize];
         for (int i=0; i<listSize; i++) {
-            String text = buttonPaneContentList.get(1).toString();
-            teamButtonTable[i].setText(text);
+            String text = buttonPaneContentList.get(i).toString();
+            teamButtonTable[i] = new JButton(text);
             buttonPane.add(teamButtonTable[i]);
             teamButtonTable[i].addActionListener(this);
             teamButtonTable[i].setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

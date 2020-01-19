@@ -35,7 +35,7 @@ public class SignUp extends JFrame implements ActionListener {
 
     /** Konstruktor */
     public SignUp() {
-        setTitle("Rejestracja");
+        super("Rejestracja");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout());
 
@@ -104,8 +104,8 @@ public class SignUp extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object object = actionEvent.getSource();
         if(object == signUpButton) {
-            JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Succes", JOptionPane.INFORMATION_MESSAGE);
-            new Logging();
+            JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
+            DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()), firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
             this.dispose();
         }
     }

@@ -1,3 +1,5 @@
+package TablesClasses;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -6,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Druzyna", uniqueConstraints = {
+@Table(name = "druzyna", schema = "sportleague", uniqueConstraints = {
         @UniqueConstraint(columnNames = "idDruzyny")})
 public class Team {
 
@@ -14,9 +16,13 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idDruzyny", unique = true, nullable = false)
     private int teamId;
+    @Column(name = "zwyciestwa", nullable = false)
     private int wins;
+    @Column(name = "remisy", nullable = false)
     private int draws;
+    @Column(name = "porazki", nullable = false)
     private int losts;
+    @Column(name = "zdobytePunkty", nullable = false)
     private int scoredPoints;
 
     public int getScoredPoints() {
