@@ -83,23 +83,27 @@ public class Menu extends JFrame implements ActionListener {
         Object source = e.getSource();
         if (source == menuButton && menuComboBox.getSelectedItem() != null) {
             Object comboBoxSource = menuComboBox.getSelectedItem();
+            String[] text = new String[1];
             if (comboBoxSource == "Drużyny") {
-                new ButtonList("Drużyny");
+                text[0] = "Drużyny";
+                new ButtonList(text);
             }
             if (comboBoxSource == "Turnieje") {
-                new ButtonList("Turnieje");
+                text[0] = "Turnieje";
+                new ButtonList(text);
             }
             if (comboBoxSource == "Statystyki zawodników") {
-                new ButtonList("Statystyki");
+                text[0] = "Statystyki";
+                new ButtonList(text);
             }
             if (comboBoxSource == "Dodaj drużynę") {
-
+                new AddTeam();
             }
             if (comboBoxSource == "Usuń drużynę") {
 
             }
             if (comboBoxSource == "Dodaj zawodnika") {
-
+                new AddPlayer(1);
             }
             if (comboBoxSource == "Dodaj turniej") {
 
@@ -113,7 +117,7 @@ public class Menu extends JFrame implements ActionListener {
             if (comboBoxSource == "Prośby uzytkowników") {
 
             }
-            //this.dispose();
+            this.dispose();
         }
     }
 }
