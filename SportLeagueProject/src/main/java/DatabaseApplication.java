@@ -84,7 +84,7 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
             return query.list();
         }
-        else if(args[0].equals("playerSoredPoints")) {
+        else if(args[0].equals("playerScoredPoints")) {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
         }
