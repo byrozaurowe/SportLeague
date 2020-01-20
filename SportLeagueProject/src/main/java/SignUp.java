@@ -32,36 +32,38 @@ public class SignUp extends JFrame implements ActionListener {
     private JLabel firstNameLabel;
     /** Pole na imie */
     private JTextField firstNameField;
+    /** Panel na label i guzik */
+    private JPanel panel2;
 
     /** Konstruktor */
      SignUp() {
         super("Rejestracja");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
-        panel = new JPanel(new BorderLayout());
+        panel = new JPanel(new BorderLayout(10,10));
 
         headerLabel = new JLabel("Rejestracja");
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 23));
         headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        loginLabel = new JLabel("login:");
+        loginLabel = new JLabel("Login:");
         loginLabel.setFont(font);
         loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
         loginField = new JTextField(10);
         loginField.setFont(font);
 
-        passwordLabel = new JLabel("hasło:");
+        passwordLabel = new JLabel("Hasło:");
         passwordLabel.setFont(font);
         passwordLabel.setHorizontalAlignment(SwingConstants.CENTER);
         passwordField = new JPasswordField(10);
         passwordField.setFont(font);
 
-        firstNameLabel = new JLabel("imię:");
+        firstNameLabel = new JLabel("Imię:");
         firstNameLabel.setFont(font);
         firstNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         firstNameField = new JTextField(10);
         firstNameField.setFont(font);
 
-        nameLabel = new JLabel("nazwisko:");
+        nameLabel = new JLabel("Nazwisko:");
         nameLabel.setFont(font);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         nameField = new JTextField(10);
@@ -76,7 +78,10 @@ public class SignUp extends JFrame implements ActionListener {
         signUpButton = new JButton("Zarejestruj");
         signUpButton.setFont(font);
 
-        panel1 = new JPanel(new GridLayout(5,2));
+        panel2 = new JPanel(new FlowLayout());
+        panel2.add(signUpButton);
+
+        panel1 = new JPanel(new GridLayout(5,2, 10, 10));
         panel1.add(loginLabel);
         panel1.add(loginField);
         panel1.add(passwordLabel);
@@ -90,12 +95,20 @@ public class SignUp extends JFrame implements ActionListener {
 
         panel.add(headerLabel, BorderLayout.NORTH);
         panel.add(panel1, BorderLayout.CENTER);
-        panel.add(signUpButton, BorderLayout.SOUTH);
+        panel.add(panel2, BorderLayout.SOUTH);
         add(panel);
 
         setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = (centerPoint.x - windowSize.width) / 2;
+        int dy = (centerPoint.y - windowSize.height) / 2;
+        setLocation(dx, dy);
+
         pack();
 
         signUpButton.addActionListener(this);
@@ -104,10 +117,15 @@ public class SignUp extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object object = actionEvent.getSource();
         if(object == signUpButton) {
-            JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
-            DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
-                    firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
-            this.dispose();
+            if(loginField.getText().equals("") || String.valueOf(passwordField.getPassword()).equals("") || firstNameField.getText().equals("") || nameField.getText().equals("") || peselField.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Wszystkie pola muszą być wypełnione!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
+                DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
+                        firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
+                this.dispose();
+            }
         }
     }
 }

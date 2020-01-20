@@ -1,4 +1,6 @@
 import TablesClasses.AppUser;
+import TablesClasses.Player;
+import TablesClasses.Team;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
 import java.util.List;
@@ -107,8 +109,37 @@ class DatabaseApplication {
             query = session.createQuery("SELECT poziomUprawnien FROM AppUser WHERE login = :login");
             query.setParameter("login", args[1]);
             List temp = query.list();
+            if(temp.size() == 0) {
+                System.out.println("Nieprawidlowe dane");
+            }
             result.add(temp.get(0));
             return result;
+        }
+        else if(args[0].equals("addPlayer")) {
+            session.beginTransaction();
+            Player player = new Player();
+            player.setName(args[1]);
+            player.setSurname(args[2]);
+            player.setSex(args[3]);
+            player.setBirthYear(Integer.parseInt(args[4]));
+            player.setPlayerNumber(Integer.parseInt(args[5]));
+            player.setTeamId(Integer.parseInt(args[6]));
+            session.save(player);
+            session.getTransaction().commit();
+        }
+        else if(args[0].equals("addTeam")) {
+            session.beginTransaction();
+            Team team = new Team();
+            team.setTeamName(args[1]);
+            team.setCity(args[2]);
+            team.setFoundationYear(Integer.parseInt(args[3]));
+            team.setDivision(args[4]);
+            team.setDraws(0);
+            team.setScoredPoints(0);
+            team.setWins(0);
+            team.setLosts(0);
+            session.save(team);
+            session.getTransaction().commit();
         }
         return null;
     }

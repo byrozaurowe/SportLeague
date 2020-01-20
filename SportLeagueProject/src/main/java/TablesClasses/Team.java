@@ -87,14 +87,6 @@ public class Team {
         this.city = city;
     }
 
-    public String city() {
-        return city;
-    }
-
-    public void city(String city) {
-        this.city = city;
-    }
-
     @Column(name = "rokZalozenia", nullable = false)
     private int foundationYear;
 
