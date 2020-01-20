@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.List;
 
 public class ButtonList extends JFrame implements ActionListener {
-    String type;
+    String[] type;
     JPanel buttonPane;
     JButton[] buttonTable;
     JLabel[][] teamLabelTable;
@@ -24,7 +24,7 @@ public class ButtonList extends JFrame implements ActionListener {
         return label;
     }
 
-    public ButtonList(String type) {
+    public ButtonList(String[] type) {
         this.type = type;
 
         setVisible(true);
@@ -33,7 +33,7 @@ public class ButtonList extends JFrame implements ActionListener {
 
         buttonPane = new JPanel();
 
-        if (this.type == "Drużyny") {
+        if (type[0] == "Drużyny") {
             buttonPane.add(newLabel("Drużyna"));
             buttonPaneContentList = DatabaseApplication.queries(new String[] {"getTeams"});
             buttonPane.add(newLabel("Miasto"));
@@ -51,7 +51,7 @@ public class ButtonList extends JFrame implements ActionListener {
             buttonPane.add(newLabel("Zdobyte punkty"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamPoints"}));
         }
-        else if (this.type == "Turnieje") {
+        else if (type[0] == "Turnieje") {
             buttonPane.add(newLabel("Turniej"));
             buttonPaneContentList = DatabaseApplication.queries(new String[] {"getTournaments"});
             buttonPane.add(newLabel("Data"));
@@ -61,7 +61,7 @@ public class ButtonList extends JFrame implements ActionListener {
             buttonPane.add(newLabel("Dywizja"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"tournamentDivision"}));
         }
-        else if (this.type == "Statystyki") {
+        else if (type[0] == "Statystyki") {
             buttonPane.add(newLabel("Imię"));
             labelContentList.add(DatabaseApplication.queries(new String[] {"playerName"}));
             buttonPane.add(newLabel("Nazwisko"));
@@ -79,7 +79,7 @@ public class ButtonList extends JFrame implements ActionListener {
         }
 
         int listSize;
-        if (this.type != "Statystyki") {
+        if (type[0] != "Statystyki") {
             listSize = buttonPaneContentList.size();
             buttonTable = new JButton[listSize];
         }
@@ -88,13 +88,13 @@ public class ButtonList extends JFrame implements ActionListener {
         }
         int wid, hei;
         wid = labelContentList.size();
-        if (this.type != "Statystyki") wid++;
+        if (type[0] != "Statystyki") wid++;
         hei = listSize+1;
         buttonPane.setLayout(new GridLayout(hei, wid));
         teamLabelTable = new JLabel[listSize][labelContentList.size()];
 
         for (int i=0; i<listSize; i++) {
-            if (!type.equals("Statystyki")) {
+            if (!type[0].equals("Statystyki")) {
                 String text = buttonPaneContentList.get(i).toString();
                 buttonTable[i] = new JButton(text);
                 buttonPane.add(buttonTable[i]);
@@ -120,6 +120,18 @@ public class ButtonList extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-
+        Object object = e.getSource();
+        /*for (JButton button: buttonTable) {
+            if (button == object)  {
+                if (type[0] == "Druzyny") {
+                    String[] text = new String[2];
+                    text[0] = "Zawodnicy";
+                    System.out.println(button.getText());
+                    text[1] = button.getText();
+                    new ButtonList(text);
+                }
+            }
+        } */
+        this.dispose();
     }
 }

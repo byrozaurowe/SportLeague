@@ -69,7 +69,8 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerTeam")) {
-            Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
+            //Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
+            SQLQuery query = session.createSQLQuery("SELECT nazwaDruzyny FROM Druzyna JOIN Zawodnik ON Druzyna.idDruzyny = Zawodnik.idDruzyny");
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
@@ -84,7 +85,7 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
             return query.list();
         }
-        else if(args[0].equals("playerSoredPoints")) {
+        else if(args[0].equals("playerScoredPoints")) {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
         }
