@@ -2,32 +2,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
+import java.util.List;
 
 /** Klasa okna logowania */
 public class Logging extends JFrame implements ActionListener {
 
     /** Panel glowny */
-    JPanel panel;
+    private JPanel panel;
     /** Panel pomocniczy na logowanie */
-    JPanel panel1;
+    private JPanel panel1;
     /** Etykieta naglowka */
-    JLabel headerLabel;
+    private JLabel headerLabel;
     /** Etykieta hasła */
-    JLabel passwordLabel;
+    private JLabel passwordLabel;
     /** Etykieta loginu */
-    JLabel loginLabel;
+    private JLabel loginLabel;
     /** Pole na haslo */
-    JPasswordField passwordField;
+    private JPasswordField passwordField;
     /** Pole na login */
-    JTextField loginField;
+    private JTextField loginField;
     /** Przycisk logujacy */
-    JButton logInButton;
+    private JButton logInButton;
     /** Przycisk rejestracji */
-    JButton signUpButton;
+    private JButton signUpButton;
+    /** Panel na przyciski */
+    private JPanel buttonPanel;
 
-    JPanel buttonPanel;
     /** Konstruktor */
-    public Logging() {
+     Logging() {
         setTitle("Logowanie");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout());
@@ -84,7 +87,11 @@ public class Logging extends JFrame implements ActionListener {
             this.dispose();
         }
         else if(object == logInButton) {
-
+            List result = DatabaseApplication.queries(new String[]{"loggIn", loginField.getText(), String.valueOf(passwordField.getPassword())});
+            if(result.get(0).toString().equals("1")) {
+                new Menu(Integer.parseInt(result.get(1).toString()));
+                this.dispose();
+            }
         }
     }
 }

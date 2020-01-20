@@ -5,36 +5,36 @@ import java.awt.event.ActionListener;
 
 public class SignUp extends JFrame implements ActionListener {
     /** Panel glowny */
-    JPanel panel;
+    private JPanel panel;
     /** Panel pomocniczy na logowanie */
-    JPanel panel1;
+    private JPanel panel1;
     /** Etykieta naglowka */
-    JLabel headerLabel;
+    private JLabel headerLabel;
     /** Etykieta hasła */
-    JLabel passwordLabel;
+    private JLabel passwordLabel;
     /** Etykieta loginu */
-    JLabel loginLabel;
+    private JLabel loginLabel;
     /** Pole na haslo */
-    JPasswordField passwordField;
+    private JPasswordField passwordField;
     /** Pole na login */
-    JTextField loginField;
+    private JTextField loginField;
     /** Przycisk rejestrujacy */
-    JButton signUpButton;
+    private JButton signUpButton;
     /** Etykieta pesel */
-    JLabel peselLabel;
+    private JLabel peselLabel;
     /** Pole na pesel */
-    JTextField peselField;
+    private JTextField peselField;
     /** Etykieta nazwisko */
-    JLabel nameLabel;
+    private JLabel nameLabel;
     /** Pole na nazwisko */
-    JTextField nameField;
+    private JTextField nameField;
     /** Etykieta imie */
-    JLabel firstNameLabel;
+    private JLabel firstNameLabel;
     /** Pole na imie */
-    JTextField firstNameField;
+    private JTextField firstNameField;
 
     /** Konstruktor */
-    public SignUp() {
+     SignUp() {
         super("Rejestracja");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout());
@@ -105,7 +105,8 @@ public class SignUp extends JFrame implements ActionListener {
         Object object = actionEvent.getSource();
         if(object == signUpButton) {
             JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
-            DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()), firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
+            DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
+                    firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
             this.dispose();
         }
     }

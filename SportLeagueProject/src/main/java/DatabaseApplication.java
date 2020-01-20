@@ -1,12 +1,6 @@
 import TablesClasses.AppUser;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
-import org.hibernate.boot.model.relational.Database;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 class DatabaseApplication {
@@ -18,46 +12,51 @@ class DatabaseApplication {
         Session session = HibernateUtil.getSessionFactory().openSession();
         if(args[0].equals("getTeams")) {
             Query query = session.createQuery("SELECT teamName FROM TablesClasses.Team");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("teamCity")) {
             Query query = session.createQuery("SELECT city FROM TablesClasses.Team");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("teamFoundationYear")) {
             Query query = session.createQuery("SELECT foundationYear FROM TablesClasses.Team");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("teamDivision")) {
             Query query = session.createQuery("SELECT division FROM TablesClasses.Team");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("getTournaments")) {
             Query query = session.createQuery("SELECT tournamentName FROM TablesClasses.Tournament");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("getPlayers")) {
             Query query = session.createQuery("SELECT name, surname FROM TablesClasses.Player");
-            List result = query.list();
-            return result;
+            return query.list();
         }
         else if(args[0].equals("addUser")) {
             session.beginTransaction();
-            AppUser appUser = new AppUser();
-            appUser.setLogin(args[1]);
-            appUser.setHaslo(args[2]);
-            appUser.setImie(args[3]);
-            appUser.setNazwisko(args[4]);
-            appUser.setPesel(args[5]);
-            appUser.setPoziomUprawnien(args[6]);
-            appUser.setCzyZatwierdzony(false);
-            session.save(appUser);
+            SQLQuery query = session.createSQLQuery("call dodajUzytkownika(:login, :haslo, :imie, :nazwisko, :pesel, :poziomUprawnien)");
+            query.addEntity(AppUser.class);
+            query.setParameter("login", args[1]);
+            query.setParameter("haslo", args[2]);
+            query.setParameter("imie", args[3]);
+            query.setParameter("nazwisko", args[4]);
+            query.setParameter("pesel", args[5]);
+            query.setParameter("poziomUprawnien", Integer.parseInt(args[6]));
+            query.executeUpdate();
             session.getTransaction().commit();
+        }
+        else if(args[0].equals("loggIn")) {
+            Query query = session.createSQLQuery("call zaloguj(:login, :haslo)");
+            query.setParameter("login", args[1]);
+            query.setParameter("haslo", args[2]);
+            List result = query.list();
+            query = session.createQuery("SELECT poziomUprawnien FROM AppUser WHERE login = :login");
+            query.setParameter("login", args[1]);
+            List temp = query.list();
+            result.add(temp.get(0));
+            return result;
         }
         return null;
     }

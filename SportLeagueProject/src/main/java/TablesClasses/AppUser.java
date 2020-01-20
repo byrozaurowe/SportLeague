@@ -1,7 +1,6 @@
 package TablesClasses;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @Table(name = "uzytkownikaplikacji", uniqueConstraints = {
@@ -29,7 +28,7 @@ public class AppUser {
     private String pesel;
 
     @Column(name = "poziomUprawnien", nullable = false)
-    private String poziomUprawnien;
+    private int poziomUprawnien;
 
     @Column(name = "login", unique = true, nullable = false)
     private String login;
@@ -45,11 +44,11 @@ public class AppUser {
         this.czyZatwierdzony = czyZatwierdzony;
     }
 
-    public String getPoziomUprawnien() {
+    public int getPoziomUprawnien() {
         return poziomUprawnien;
     }
 
-    public void setPoziomUprawnien(String poziomUprawnien) {
+    public void setPoziomUprawnien(int poziomUprawnien) {
         this.poziomUprawnien = poziomUprawnien;
     }
 

@@ -24,7 +24,7 @@
 
         <property name = "pesel" column = "pesel" type = "String"/>
 
-        <property name = "poziomUprawnien" column = "pesel" type = "String"/>
+        <property name = "poziomUprawnien" column = "poziomUprawnien" type = "int"/>
 
         <property name = "czyZatwierdzony" column = "czyZatwierdzony" type = "boolean"/>
 
