@@ -26,12 +26,64 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT division FROM TablesClasses.Team");
             return query.list();
         }
+        else if(args[0].equals("teamWins")) {
+            Query query = session.createQuery("SELECT wins FROM TablesClasses.Team");
+            return query.list();
+        }
+        else if(args[0].equals("teamDraws")) {
+            Query query = session.createQuery("SELECT draws FROM TablesClasses.Team");
+            return query.list();
+        }
+        else if(args[0].equals("teamLosts")) {
+            Query query = session.createQuery("SELECT losts FROM TablesClasses.Team");
+            return query.list();
+        }
+        else if(args[0].equals("teamPoints")) {
+            Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Team");
+            return query.list();
+        }
         else if(args[0].equals("getTournaments")) {
             Query query = session.createQuery("SELECT tournamentName FROM TablesClasses.Tournament");
             return query.list();
         }
-        else if(args[0].equals("getPlayers")) {
-            Query query = session.createQuery("SELECT name, surname FROM TablesClasses.Player");
+        else if(args[0].equals("tournamentDate")) {
+            Query query = session.createQuery("SELECT tournamentDate FROM TablesClasses.Tournament");
+            return query.list();
+        }
+        else if(args[0].equals("tournamentLocation")) {
+            Query query = session.createQuery("SELECT location FROM TablesClasses.Tournament");
+            return query.list();
+        }
+        else if(args[0].equals("tournamentDivision")) {
+            Query query = session.createQuery("SELECT division FROM TablesClasses.Tournament");
+            return query.list();
+        }
+        else if(args[0].equals("playerName")) {
+            Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerSurname")) {
+            Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerTeam")) {
+            Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerNumber")) {
+            Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerSex")) {
+            Query query = session.createQuery("SELECT sex FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerBirth")) {
+            Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
+            return query.list();
+        }
+        else if(args[0].equals("playerSoredPoints")) {
+            Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
         }
         else if(args[0].equals("addUser")) {

@@ -113,7 +113,7 @@ public class Menu extends JFrame implements ActionListener {
             if (comboBoxSource == "Prośby uzytkowników") {
 
             }
-            this.dispose();
+            //this.dispose();
         }
     }
 }
