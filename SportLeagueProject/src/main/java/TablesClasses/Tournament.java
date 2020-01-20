@@ -19,11 +19,30 @@ public class Tournament {
     @Column(name = "nazwaTurnieju", nullable = false)
     private String tournamentName;
     @Column(name = "dataTurnieju", nullable = false)
-    private java.sql.Date tournamentDate;
+    private Date tournamentDate;
+
+    public Date getTournamentDate() {
+        return tournamentDate;
+    }
+
+    public void setTournamentDate(Date tournamentDate) {
+        this.tournamentDate = tournamentDate;
+    }
+
     @Column(name = "miejsce", nullable = false)
     private String location;
     @Column(name = "dywizjaTurnieju", nullable = false)
     private String division;
+    @Column(name = "idOrganizatora", nullable = false)
+    private int organizerId;
+
+    public int getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(int organizerId) {
+        this.organizerId = organizerId;
+    }
 
     public String getDivision() {
         return division;
@@ -41,13 +60,7 @@ public class Tournament {
         this.location = location;
     }
 
-    public Date getTournamentDate() {
-        return tournamentDate;
-    }
 
-    public void setTournamentDate(java.sql.Date tournamentDate) {
-        this.tournamentDate = tournamentDate;
-    }
 
     public String getTournamentName() {
         return tournamentName;

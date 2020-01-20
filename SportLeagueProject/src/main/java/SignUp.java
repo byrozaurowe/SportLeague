@@ -34,6 +34,8 @@ public class SignUp extends JFrame implements ActionListener {
     private JTextField firstNameField;
     /** Panel na label i guzik */
     private JPanel panel2;
+    /** Combobox z uprawnieniami */
+    private JComboBox permissionList;
 
     /** Konstruktor */
      SignUp() {
@@ -75,13 +77,22 @@ public class SignUp extends JFrame implements ActionListener {
         peselField = new JTextField(10);
         peselField.setFont(font);
 
+        String[] permissionStrings = {"Kapitan drużyny", "Organizator turnieju"};
+        permissionList = new JComboBox(permissionStrings);
+        permissionList.setSelectedIndex(0);
+        permissionList.setFont(font);
+        permissionList.addActionListener(this);
+        JLabel permissionLabel = new JLabel("Rodzaj konta:");
+        permissionLabel.setFont(font);
+        permissionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         signUpButton = new JButton("Zarejestruj");
         signUpButton.setFont(font);
 
         panel2 = new JPanel(new FlowLayout());
         panel2.add(signUpButton);
 
-        panel1 = new JPanel(new GridLayout(5,2, 10, 10));
+        panel1 = new JPanel(new GridLayout(6,2, 10, 10));
         panel1.add(loginLabel);
         panel1.add(loginField);
         panel1.add(passwordLabel);
@@ -92,11 +103,14 @@ public class SignUp extends JFrame implements ActionListener {
         panel1.add(nameField);
         panel1.add(peselLabel);
         panel1.add(peselField);
+        panel1.add(permissionLabel);
+        panel1.add(permissionList);
 
         panel.add(headerLabel, BorderLayout.NORTH);
         panel.add(panel1, BorderLayout.CENTER);
         panel.add(panel2, BorderLayout.SOUTH);
         add(panel);
+
 
         setVisible(true);
         setResizable(false);
@@ -121,9 +135,16 @@ public class SignUp extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Wszystkie pola muszą być wypełnione!", "Błąd", JOptionPane.ERROR_MESSAGE);
             }
             else {
+                int permissionLvl = 4;
+                if(permissionList.getSelectedItem().toString().equals("Kapitan drużyny")) {
+                    permissionLvl = 2;
+                }
+                else if(permissionList.getSelectedItem().toString().equals("Organizator turnieju")) {
+                    permissionLvl = 3;
+                }
                 JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
                 DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
-                        firstNameField.getText(), nameField.getText(), peselField.getText(), "2"});
+                        firstNameField.getText(), nameField.getText(), peselField.getText(), String.valueOf(permissionLvl)});
                 this.dispose();
             }
         }

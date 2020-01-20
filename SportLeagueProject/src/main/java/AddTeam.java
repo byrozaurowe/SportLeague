@@ -30,10 +30,13 @@ public class AddTeam extends JFrame implements ActionListener {
     private JTextField foundationYearField;
     /** Panel na label i guzik */
     private JPanel panel2;
+    /** Id uzytkownika */
+    private int userId;
 
     /** Konstruktor druzyny */
-    AddTeam() {
-        super("Dodaj drużynę");
+    AddTeam(int userId) {
+        this.userId = userId;
+        setTitle("Dodaj drużynę");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout(10,10));
 
@@ -114,13 +117,13 @@ public class AddTeam extends JFrame implements ActionListener {
                 }
                 JOptionPane.showMessageDialog(this, "Poprawnie dodano drużynę", "Sukces", JOptionPane.INFORMATION_MESSAGE);
                 DatabaseApplication.queries(new String[]{"addTeam", teamNameField.getText(), cityField.getText(),
-                        foundationYearField.getText(), divisionList.getSelectedItem().toString()});
+                        foundationYearField.getText(), divisionList.getSelectedItem().toString(), String.valueOf(userId)});
                 this.dispose();
             }
         }
     }
 
     public static void main(String[] args) {
-        new AddTeam();
+        new AddTeam(1);
     }
 }

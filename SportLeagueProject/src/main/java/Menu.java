@@ -1,3 +1,5 @@
+import TablesClasses.Team;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,20 +7,29 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class Menu extends JFrame implements ActionListener {
-    int userId = 1;
+    private int permissionLevel;
+    private int userId;
 
-    JComboBox menuComboBox;
-    JLabel menuLabel;
-    JPanel menuPanel;
-    JPanel buttonPanel;
-    JButton menuButton;
+    private JComboBox menuComboBox;
+    private JLabel menuLabel;
+    private JPanel menuPanel;
+    private JPanel buttonPanel;
+    private JButton menuButton;
 
-    public Menu (int userId) {
+    Menu (int permissionLevel, int userId) {
         setVisible(true);
         setTitle("Ultimate Frisbee League");
         setPreferredSize(new Dimension(400, 300));
+        // Ustawia okno blizej srodka
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = (centerPoint.x - windowSize.width) / 2;
+        int dy = (centerPoint.y - windowSize.height) / 2;
+        setLocation(dx, dy);
 
-        /** 1- admin, 2 - kapitan drużyny, 3 - organizator turnieju, 4 - obserwator */
+        /* 1- admin, 2 - kapitan drużyny, 3 - organizator turnieju, 4 - obserwator */
+        this.permissionLevel = permissionLevel;
         this.userId = userId;
 
         Font font = new Font ("Segoe UI", Font.PLAIN, 20);
@@ -27,7 +38,7 @@ public class Menu extends JFrame implements ActionListener {
         menuComboBoxList.add("Drużyny");
         menuComboBoxList.add("Turnieje");
         menuComboBoxList.add("Statystyki zawodników");
-        if (userId == 1) {
+        if (permissionLevel == 1) {
             menuComboBoxList.add("Dodaj drużynę");
             menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
@@ -36,11 +47,11 @@ public class Menu extends JFrame implements ActionListener {
             menuComboBoxList.add("Usuń mecz");
             menuComboBoxList.add("Prośby użytkowników");
         }
-        if (userId == 2) {
+        if (permissionLevel == 2) {
             menuComboBoxList.add("Dodaj drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
         }
-        if (userId == 3) {
+        if (permissionLevel == 3) {
             menuComboBoxList.add("Dodaj turniej");
             menuComboBoxList.add("Dodaj mecz");
             menuComboBoxList.add("Usuń mecz");
@@ -76,7 +87,7 @@ public class Menu extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        Menu main = new Menu(2);
+        Menu main = new Menu(1,0);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -97,16 +108,16 @@ public class Menu extends JFrame implements ActionListener {
                 new ButtonList(text);
             }
             if (comboBoxSource == "Dodaj drużynę") {
-                new AddTeam();
+                new AddTeam(userId);
             }
             if (comboBoxSource == "Usuń drużynę") {
 
             }
             if (comboBoxSource == "Dodaj zawodnika") {
-                new AddPlayer(1);
+                new AddPlayer(userId);
             }
             if (comboBoxSource == "Dodaj turniej") {
-
+                new AddTournament(userId);
             }
             if (comboBoxSource == "Dodaj mecz") {
 
@@ -114,10 +125,15 @@ public class Menu extends JFrame implements ActionListener {
             if (comboBoxSource == "Usuń mecz") {
 
             }
-            if (comboBoxSource == "Prośby uzytkowników") {
-
+            if(comboBoxSource == "Prośby użytkowników") {
+                if(Integer.parseInt(String.valueOf(DatabaseApplication.queries(new String[]{"userCounter"}).get(0))) > 0) {
+                    new Requests();
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-            this.dispose();
+            //this.dispose();
         }
     }
 }

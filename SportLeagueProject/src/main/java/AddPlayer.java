@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.List;
 public class AddPlayer extends JFrame implements ActionListener {
     /** Panel glowny */
     private JPanel panel;
@@ -35,15 +35,25 @@ public class AddPlayer extends JFrame implements ActionListener {
     /** Panel na label i guzik */
     private JPanel panel2;
     /** Id druzyny do ktorej dodajemy */
-    private int teamId;
+    private int userId;
+
+    private JComboBox teamNameList;
 
     /** Konstruktor okna dodaj gracza */
-    AddPlayer(int teamId) {
+    AddPlayer(int userId) {
         super("Dodaj zawodnika");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout(10,10));
 
-        this.teamId = teamId;
+        this.userId = userId;
+        List teamNameString = DatabaseApplication.queries(new String[] {"capitanTeams", String.valueOf(userId)});
+        teamNameList = new JComboBox(teamNameString.toArray());
+        teamNameList.setSelectedIndex(0);
+        teamNameList.addActionListener(this);
+        teamNameList.setFont(font);
+        JLabel teamNameLabel = new JLabel("Nazwa drużyny:");
+        teamNameLabel.setFont(font);
+        teamNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         String[] sexStrings = { "Mężczyzna", "Kobieta" };
         sexList = new JComboBox(sexStrings);
@@ -89,7 +99,9 @@ public class AddPlayer extends JFrame implements ActionListener {
         panel2 = new JPanel(new FlowLayout());
         panel2.add(addPlayerButton);
 
-        panel1 = new JPanel(new GridLayout(5,2, 10, 10));
+        panel1 = new JPanel(new GridLayout(6,2, 10, 10));
+        panel1.add(teamNameLabel);
+        panel1.add(teamNameList);
         panel1.add(firstNameLabel);
         panel1.add(firstNameField);
         panel1.add(nameLabel);
@@ -145,13 +157,13 @@ public class AddPlayer extends JFrame implements ActionListener {
                 }
                 JOptionPane.showMessageDialog(this, "Poprawnie dodano zawodnika do drużyny", "Sukces", JOptionPane.INFORMATION_MESSAGE);
                 DatabaseApplication.queries(new String[]{"addPlayer", firstNameField.getText(), nameField.getText(),
-                        sexList.getSelectedItem().toString(), birthYearField.getText(), playerNumberField.getText(), String.valueOf(teamId)});
+                        sexList.getSelectedItem().toString(), birthYearField.getText(), playerNumberField.getText(), teamNameList.getSelectedItem().toString()});
                 this.dispose();
             }
         }
     }
 
     public static void main(String[] args) {
-        new AddPlayer(1);
+        new AddPlayer(2);
     }
 }

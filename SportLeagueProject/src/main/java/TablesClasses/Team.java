@@ -24,6 +24,16 @@ public class Team {
     private int losts;
     @Column(name = "zdobytePunkty", nullable = false)
     private int scoredPoints;
+    @Column(name = "idUzytkownikaKapitana", nullable = false)
+    private int capitanUserId;
+
+    public int getCapitanUserId() {
+        return capitanUserId;
+    }
+
+    public void setCapitanUserId(int capitanUserId) {
+        this.capitanUserId = capitanUserId;
+    }
 
     public int getScoredPoints() {
         return scoredPoints;
