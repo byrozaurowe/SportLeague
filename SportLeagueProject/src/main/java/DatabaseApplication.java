@@ -21,6 +21,31 @@ class DatabaseApplication {
             List result = query.list();
             return result;
         }
+        else if(args[0].equals("teamCity")) {
+            Query query = session.createQuery("SELECT city FROM TablesClasses.Team");
+            List result = query.list();
+            return result;
+        }
+        else if(args[0].equals("teamFoundationYear")) {
+            Query query = session.createQuery("SELECT foundationYear FROM TablesClasses.Team");
+            List result = query.list();
+            return result;
+        }
+        else if(args[0].equals("teamDivision")) {
+            Query query = session.createQuery("SELECT division FROM TablesClasses.Team");
+            List result = query.list();
+            return result;
+        }
+        else if(args[0].equals("getTournaments")) {
+            Query query = session.createQuery("SELECT tournamentName FROM TablesClasses.Tournament");
+            List result = query.list();
+            return result;
+        }
+        else if(args[0].equals("getPlayers")) {
+            Query query = session.createQuery("SELECT name, surname FROM TablesClasses.Player");
+            List result = query.list();
+            return result;
+        }
         else if(args[0].equals("addUser")) {
             session.beginTransaction();
             AppUser appUser = new AppUser();
