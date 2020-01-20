@@ -112,7 +112,9 @@ class DatabaseApplication {
             if(temp.size() == 0) {
                 System.out.println("Nieprawidlowe dane");
             }
-            result.add(temp.get(0));
+            else {
+                result.add(temp.get(0));
+            }
             return result;
         }
         else if(args[0].equals("addPlayer")) {
