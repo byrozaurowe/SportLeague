@@ -114,7 +114,12 @@ public class Menu extends JFrame implements ActionListener {
 
             }
             if (comboBoxSource == "Dodaj zawodnika") {
-                new AddPlayer(userId);
+                if(Integer.parseInt(String.valueOf(DatabaseApplication.queries(new String[]{"countTeams", String.valueOf(userId)}).get(0))) > 0) {
+                    new AddPlayer(userId);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Nie posiadasz żadnych drużyn, żeby dodać zawodnika", "Brak", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
             if (comboBoxSource == "Dodaj turniej") {
                 new AddTournament(userId);
@@ -133,7 +138,6 @@ public class Menu extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
-            //this.dispose();
         }
     }
 }

@@ -99,6 +99,11 @@ class DatabaseApplication {
             query.setParameter("idUzytkownikaKapitana", args[1]);
             return query.list();
         }
+        else if(args[0].equals("countTeams")) {
+            Query query = session.createQuery("SELECT COUNT(*) FROM Team WHERE idUzytkownikaKapitana = :idUzytkownikaKapitana");
+            query.setParameter("idUzytkownikaKapitana", args[1]);
+            return query.list();
+        }
         else if(args[0].equals("requestsLogins")) {
             Query query = session.createQuery("SELECT login FROM AppUser WHERE czyZatwierdzony = 0 ORDER BY idUzytkownika");
             return query.list();
