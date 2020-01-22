@@ -102,7 +102,6 @@ public class Logging extends JFrame implements ActionListener {
         Object object = actionEvent.getSource();
         if(object == signUpButton) {
             new SignUp();
-            this.dispose();
         }
         else if(object == logInButton) {
             List result = DatabaseApplication.queries(new String[]{"loggIn", loginField.getText(), String.valueOf(passwordField.getPassword())});

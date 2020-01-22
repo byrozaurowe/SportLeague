@@ -71,7 +71,7 @@ public class AddTeam extends JFrame implements ActionListener {
         divisionList.setFont(font);
         divisionList.addActionListener(this);
 
-        addPlayerButton = new JButton("Zarejestruj");
+        addPlayerButton = new JButton("Dodaj");
         addPlayerButton.setFont(font);
         addPlayerButton.addActionListener(this);
 
@@ -121,9 +121,5 @@ public class AddTeam extends JFrame implements ActionListener {
                 this.dispose();
             }
         }
-    }
-
-    public static void main(String[] args) {
-        new AddTeam(1);
     }
 }

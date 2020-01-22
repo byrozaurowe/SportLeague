@@ -1,9 +1,12 @@
-import TablesClasses.AppUser;
-import TablesClasses.Player;
-import TablesClasses.Team;
-import TablesClasses.Tournament;
+import TablesClasses.*;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 class DatabaseApplication {
@@ -13,6 +16,8 @@ class DatabaseApplication {
     public static List queries(String[] args) {
         org.apache.log4j.BasicConfigurator.configure(new NullAppender());
         Session session = HibernateUtil.getSessionFactory().openSession();
+        List result = null;
+        session.beginTransaction();
         if(args[0].equals("getTeams")) {
             Query query = session.createQuery("SELECT teamName FROM TablesClasses.Team");
             return query.list();
@@ -90,6 +95,35 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
         }
+        else if(args[0].equals("addMatch")) {
+            Query query = session.createQuery("SELECT COUNT(*) FROM Match");
+            Match match = new Match();
+            match.setIdMeczu(Integer.parseInt(String.valueOf(query.list().get(0)))+1);
+            query = session.createQuery("SELECT teamId FROM TablesClasses.Team WHERE teamName = :teamName");
+            query.setParameter("teamName", args[1]);
+            match.setIdDruzynyPierwszej(Integer.parseInt(String.valueOf(query.list().get(0))));
+            query = session.createQuery("SELECT teamId FROM TablesClasses.Team WHERE teamName = :teamName");
+            query.setParameter("teamName", args[2]);
+            match.setIdDruzynyDrugiej(Integer.parseInt(String.valueOf(query.list().get(0))));
+            query = session.createQuery("SELECT tournamentId FROM TablesClasses.Tournament WHERE tournamentName = :tournamentName");
+            query.setParameter("tournamentName", args[3]);
+            match.setIdTurnieju(Integer.parseInt(String.valueOf(query.list().get(0))));
+            match.setPunktyDruzynyPierwszej(0);
+            match.setPunktyDruzynyDrugiej(0);
+            session.save(match);
+        }
+        else if(args[0].equals("allTeams")) {
+            Query query = session.createQuery("SELECT division FROM Tournament WHERE tournamentId = :tournamentId");
+            query.setParameter("tournamentId", Integer.parseInt(args[1]));
+            String division = String.valueOf(query.list().get(0));
+            query = session.createQuery("SELECT teamName FROM Team WHERE division = :division");
+            query.setParameter("division", division);
+            return query.list();
+        }
+        else if(args[0].equals("allTournaments")) {
+            Query query = session.createQuery("SELECT tournamentName FROM Tournament ORDER BY tournamentDate DESC");
+            return query.list();
+        }
         else if(args[0].equals("userCounter")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM AppUser WHERE czyZatwierdzony = 0");
             return query.list();
@@ -125,29 +159,24 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("confirmUser")) {
-            session.beginTransaction();
             Query query = session.createQuery("SELECT idUzytkownika FROM AppUser WHERE login = :login");
             query.setParameter("login", args[1]);
             int id = Integer.parseInt(String.valueOf(query.list().get(0)));
             query = session.createQuery("UPDATE AppUser set czyZatwierdzony = true WHERE idUzytkownika = :idUzytkownika");
             query.setParameter("idUzytkownika", id);
             query.executeUpdate();
-            session.getTransaction().commit();
         }
         else if(args[0].equals("declineUser")) {
-            session.beginTransaction();
             Query query = session.createQuery("SELECT idUzytkownika FROM AppUser WHERE login = :login");
             query.setParameter("login", args[1]);
             int id = Integer.parseInt(String.valueOf(query.list().get(0)));
             query = session.createQuery("DELETE FROM AppUser WHERE idUzytkownika = :idUzytkownika");
             query.setParameter("idUzytkownika", id);
             query.executeUpdate();
-            session.getTransaction().commit();
+
         }
         else if(args[0].equals("addUser")) {
-            session.beginTransaction();
             SQLQuery query = session.createSQLQuery("call dodajUzytkownika(:login, :haslo, :imie, :nazwisko, :pesel, :poziomUprawnien)");
-            query.addEntity(AppUser.class);
             query.setParameter("login", args[1]);
             query.setParameter("haslo", args[2]);
             query.setParameter("imie", args[3]);
@@ -155,13 +184,12 @@ class DatabaseApplication {
             query.setParameter("pesel", args[5]);
             query.setParameter("poziomUprawnien", Integer.parseInt(args[6]));
             query.executeUpdate();
-            session.getTransaction().commit();
         }
         else if(args[0].equals("loggIn")) {
             Query query = session.createSQLQuery("call zaloguj(:login, :haslo)");
             query.setParameter("login", args[1]);
             query.setParameter("haslo", args[2]);
-            List result = query.list();
+            result = query.list();
             query = session.createQuery("SELECT poziomUprawnien FROM AppUser WHERE login = :login");
             query.setParameter("login", args[1]);
             List temp = query.list();
@@ -180,12 +208,11 @@ class DatabaseApplication {
         else if(args[0].equals("addPlayer")) {
             SQLQuery query = session.createSQLQuery("SELECT idDruzyny FROM druzyna WHERE nazwaDruzyny = :nazwaDruzyny");
             query.setParameter("nazwaDruzyny", args[6]);
-            List result = query.list();
+            result = query.list();
             int teamId = Integer.parseInt(String.valueOf(result.get(0)));
             query = session.createSQLQuery("SELECT COUNT(*) FROM zawodnik WHERE idDruzyny = :idDruzyny");
             query.setParameter("idDruzyny", teamId);
             result = query.list();
-            session.beginTransaction();
             Player player = new Player();
             player.setPlayerId(Integer.parseInt(String.valueOf(result.get(0))));
             player.setName(args[1]);
@@ -195,12 +222,10 @@ class DatabaseApplication {
             player.setPlayerNumber(Integer.parseInt(args[5]));
             player.setTeamId(teamId);
             session.save(player);
-            session.getTransaction().commit();
         }
         else if(args[0].equals("addTeam")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM TablesClasses.Team");
             int id = Integer.parseInt(String.valueOf(query.list().get(0)));
-            session.beginTransaction();
             Team team = new Team();
             team.setTeamId(id);
             team.setTeamName(args[1]);
@@ -213,22 +238,30 @@ class DatabaseApplication {
             team.setLosts(0);
             team.setCapitanUserId(Integer.parseInt(args[5]));
             session.save(team);
-            session.getTransaction().commit();
         }
         else if(args[0].equals("addTournament")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM TablesClasses.Tournament");
             int id = Integer.parseInt(String.valueOf(query.list().get(0)));
-            session.beginTransaction();
             Tournament tournament = new Tournament();
             tournament.setTournamentId(id);
             tournament.setTournamentName(args[1]);
-            //tournament.setTournamentDate(args[3]);
+            SimpleDateFormat formatter =new SimpleDateFormat("dd/MM/yyyy");
+            Date date = null;
+            try {
+                date = formatter.parse(args[3]);
+            } catch (ParseException e) {
+                return new ArrayList(Arrays.asList("wrongDateFormat"));
+            }
+            tournament.setTournamentDate(new java.sql.Date(date.getTime()));
             tournament.setDivision(args[4]);
             tournament.setLocation(args[2]);
             tournament.setOrganizerId(Integer.parseInt(args[5]));
             session.save(tournament);
-            session.getTransaction().commit();
         }
-        return null;
+        session.getTransaction().commit();
+        if(result == null) {
+            result = new ArrayList();
+        }
+        return result;
     }
 }

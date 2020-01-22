@@ -93,10 +93,6 @@ public class Requests extends JFrame implements ActionListener {
         pack();
     }
 
-    public static void main(String[] args) {
-        new Requests();
-    }
-
     public void actionPerformed(ActionEvent actionEvent) {
         Object event = actionEvent.getSource();
         for(int i = 0; i < confirmButton.length; i++) {

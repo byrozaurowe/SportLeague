@@ -1,5 +1,3 @@
-import TablesClasses.Team;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -86,8 +84,11 @@ public class Menu extends JFrame implements ActionListener {
         pack();
     }
 
+    //TODO: Trzeba zrobic dla organizatora zakladke moje turnieje, tam bedziemy klikali w turniej konkretny i dopiero w nim bedzie mozliwosc dodania meczu,
+    // bo jak mecz jest w glownym menu to jest problem z dodawaniem druzym o odpowiedniej dywizji
+
     public static void main(String[] args) {
-        Menu main = new Menu(1,0);
+        new Menu(1,0);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -125,7 +126,6 @@ public class Menu extends JFrame implements ActionListener {
                 new AddTournament(userId);
             }
             if (comboBoxSource == "Dodaj mecz") {
-
             }
             if (comboBoxSource == "Usuń mecz") {
 

@@ -56,7 +56,7 @@ public class AddTournament extends JFrame implements ActionListener {
         locationField = new JTextField(10);
         locationField.setFont(font);
 
-        dateLabel = new JLabel("Data:");
+        dateLabel = new JLabel("Data (d/m/r):");
         dateLabel.setFont(font);
         dateLabel.setHorizontalAlignment(SwingConstants.CENTER);
         dateField = new JTextField(10);
@@ -108,9 +108,12 @@ public class AddTournament extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Wszystkie pola muszą być wypełnione!", "Błąd", JOptionPane.ERROR_MESSAGE);
             }
             else {
+                if(DatabaseApplication.queries(new String[]{"addTournament", tournamentNameField.getText(), locationField.getText(),
+                        dateField.getText(), divisionList.getSelectedItem().toString(), String.valueOf(userId)}).size() > 0) {
+                    JOptionPane.showMessageDialog(this, "Nieprawidłowy format daty!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 JOptionPane.showMessageDialog(this, "Poprawnie dodano turniej", "Sukces", JOptionPane.INFORMATION_MESSAGE);
-                DatabaseApplication.queries(new String[]{"addTournament", tournamentNameField.getText(), locationField.getText(),
-                        dateField.getText(), divisionList.getSelectedItem().toString(), String.valueOf(userId)});
                 this.dispose();
             }
         }
