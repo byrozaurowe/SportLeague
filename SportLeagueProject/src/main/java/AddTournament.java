@@ -96,7 +96,7 @@ public class AddTournament extends JFrame implements ActionListener {
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
     }
 

@@ -15,7 +15,7 @@
         </id>
 
         <property name = "tournamentName" column = "nazwaTurnieju" type = "java.lang.String"/>
-        <property name = "tournamentDate" column = "dataTurnieju" type = "date"/>
+        <property name = "tournamentDate" column = "dataTurnieju" type = "java.sql.Date"/>
         <property name = "location" column = "miejsce" type = "java.lang.String"/>
         <property name = "division" column = "dywizjaTurnieju" type = "java.lang.String"/>
         <property name = "organizerId" column = "idOrganizatora" type = "int"/>

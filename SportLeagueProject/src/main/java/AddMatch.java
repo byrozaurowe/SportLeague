@@ -31,7 +31,7 @@ public class AddMatch extends JFrame implements ActionListener {
         panel = new JPanel(new BorderLayout(10,10));
 
         this.userId = userId;
-        List teamNameString = DatabaseApplication.queries(new String[] {"allTeams", String.valueOf(tournamentId)});
+        List teamNameString = DatabaseApplication.queries(new String[] {"allTeamsByDivision", String.valueOf(tournamentId)});
         teamNameString.add("------");
         teamNameList = new JComboBox(teamNameString.toArray());
         teamNameList.setSelectedIndex(0);

@@ -41,18 +41,22 @@ public class Menu extends JFrame implements ActionListener {
             menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
             menuComboBoxList.add("Dodaj turniej");
-            menuComboBoxList.add("Dodaj mecz");
-            menuComboBoxList.add("Usuń mecz");
+            menuComboBoxList.add("Moje turnieje");
             menuComboBoxList.add("Prośby użytkowników");
+            menuComboBoxList.add("Wyloguj się");
         }
-        if (permissionLevel == 2) {
+        else if (permissionLevel == 2) {
             menuComboBoxList.add("Dodaj drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
+            menuComboBoxList.add("Wyloguj się");
         }
-        if (permissionLevel == 3) {
+        else if (permissionLevel == 3) {
+            menuComboBoxList.add("Moje turnieje");
             menuComboBoxList.add("Dodaj turniej");
-            menuComboBoxList.add("Dodaj mecz");
-            menuComboBoxList.add("Usuń mecz");
+            menuComboBoxList.add("Wyloguj się");
+        }
+        else if (permissionLevel == 4) {
+            menuComboBoxList.add("Zaloguj się");
         }
         menuComboBox = new JComboBox(menuComboBoxList.toArray());
 
@@ -84,37 +88,34 @@ public class Menu extends JFrame implements ActionListener {
         pack();
     }
 
-    //TODO: Trzeba zrobic dla organizatora zakladke moje turnieje, tam bedziemy klikali w turniej konkretny i dopiero w nim bedzie mozliwosc dodania meczu,
-    // bo jak mecz jest w glownym menu to jest problem z dodawaniem druzym o odpowiedniej dywizji
-
     public static void main(String[] args) {
-        new Menu(1,0);
+        new Menu(1,1);
     }
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == menuButton && menuComboBox.getSelectedItem() != null) {
+        if (source == menuButton) {
             Object comboBoxSource = menuComboBox.getSelectedItem();
             String[] text = new String[1];
             if (comboBoxSource == "Drużyny") {
                 text[0] = "Drużyny";
                 new ButtonList(text);
             }
-            if (comboBoxSource == "Turnieje") {
+            else if (comboBoxSource == "Turnieje") {
                 text[0] = "Turnieje";
                 new ButtonList(text);
             }
-            if (comboBoxSource == "Statystyki zawodników") {
+            else if (comboBoxSource == "Statystyki zawodników") {
                 text[0] = "Statystyki";
                 new ButtonList(text);
             }
-            if (comboBoxSource == "Dodaj drużynę") {
+            else if (comboBoxSource == "Dodaj drużynę") {
                 new AddTeam(userId);
             }
-            if (comboBoxSource == "Usuń drużynę") {
-
+            else if (comboBoxSource == "Usuń drużynę") {
+                new DeleteTeam(userId);
             }
-            if (comboBoxSource == "Dodaj zawodnika") {
+            else if (comboBoxSource == "Dodaj zawodnika") {
                 if(Integer.parseInt(String.valueOf(DatabaseApplication.queries(new String[]{"countTeams", String.valueOf(userId)}).get(0))) > 0) {
                     new AddPlayer(userId);
                 }
@@ -122,21 +123,23 @@ public class Menu extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Nie posiadasz żadnych drużyn, żeby dodać zawodnika", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
-            if (comboBoxSource == "Dodaj turniej") {
+            else if (comboBoxSource == "Dodaj turniej") {
                 new AddTournament(userId);
             }
-            if (comboBoxSource == "Dodaj mecz") {
+            else if (comboBoxSource == "Moje turnieje") {
+                new MyTournaments(userId);
             }
-            if (comboBoxSource == "Usuń mecz") {
-
-            }
-            if(comboBoxSource == "Prośby użytkowników") {
+            else if(comboBoxSource == "Prośby użytkowników") {
                 if(Integer.parseInt(String.valueOf(DatabaseApplication.queries(new String[]{"userCounter"}).get(0))) > 0) {
                     new Requests();
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
+            }
+            else if(comboBoxSource == "Wyloguj się" || comboBoxSource == "Zaloguj się") {
+                new Logging();
+                this.dispose();
             }
         }
     }

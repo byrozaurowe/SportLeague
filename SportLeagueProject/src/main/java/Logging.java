@@ -31,7 +31,7 @@ public class Logging extends JFrame implements ActionListener {
     private JButton spectatorButton;
 
     /** Konstruktor */
-     private Logging() {
+    Logging() {
         setTitle("Logowanie");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         panel = new JPanel(new BorderLayout(10,10));
@@ -82,7 +82,7 @@ public class Logging extends JFrame implements ActionListener {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-
+        setVisible(true);
         Dimension windowSize = getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
@@ -94,8 +94,7 @@ public class Logging extends JFrame implements ActionListener {
 
 
     public static void main(String[] args) {
-        Logging frame = new Logging();
-        frame.setVisible(true);
+        new Logging();
     }
 
     public void actionPerformed(ActionEvent actionEvent) {

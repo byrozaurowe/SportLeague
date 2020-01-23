@@ -95,6 +95,18 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
         }
+        else if(args[0].equals("requestTournaments")) {
+            Query query = session.createQuery("FROM TablesClasses.Tournament WHERE organizerId = :organizerId");
+            query.setParameter("organizerId", Integer.parseInt(args[1]));
+            return query.list();
+        }
+        else if(args[0].equals("checkPassword")) {
+            SQLQuery query = session.createSQLQuery("call sprawdzHaslo(:pass, :id)");
+            query.setParameter("pass", args[1]);
+            query.setParameter("id", Integer.parseInt(args[2]));
+            result = query.list();
+            return result;
+        }
         else if(args[0].equals("addMatch")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM Match");
             Match match = new Match();
@@ -112,12 +124,21 @@ class DatabaseApplication {
             match.setPunktyDruzynyDrugiej(0);
             session.save(match);
         }
-        else if(args[0].equals("allTeams")) {
+        else if(args[0].equals("allTeamsByDivision")) {
             Query query = session.createQuery("SELECT division FROM Tournament WHERE tournamentId = :tournamentId");
             query.setParameter("tournamentId", Integer.parseInt(args[1]));
             String division = String.valueOf(query.list().get(0));
             query = session.createQuery("SELECT teamName FROM Team WHERE division = :division");
             query.setParameter("division", division);
+            return query.list();
+        }
+        else if(args[0].equals("allTeams")) {
+            Query query = session.createQuery("FROM Team");
+            return query.list();
+        }
+        else if(args[0].equals("myAllTeams")) {
+            Query query = session.createQuery("FROM Team WHERE capitanUserId = :capitanUserId");
+            query.setParameter("capitanUserId", Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("allTournaments")) {
@@ -156,6 +177,11 @@ class DatabaseApplication {
         }
         else if(args[0].equals("requestsPermissions")) {
             Query query = session.createQuery("SELECT poziomUprawnien FROM AppUser WHERE czyZatwierdzony = 0 ORDER BY idUzytkownika");
+            return query.list();
+        }
+        else if(args[0].equals("userPermissionLevel")) {
+            Query query = session.createQuery("SELECT poziomUprawnien FROM AppUser WHERE idUzytkownika = :idUzytkownika");
+            query.setParameter("idUzytkownika", Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("confirmUser")) {

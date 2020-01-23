@@ -19,13 +19,13 @@ public class Tournament {
     @Column(name = "nazwaTurnieju", nullable = false)
     private String tournamentName;
     @Column(name = "dataTurnieju", nullable = false)
-    private Date tournamentDate;
+    private java.sql.Date tournamentDate;
 
-    public Date getTournamentDate() {
+    public java.sql.Date getTournamentDate() {
         return tournamentDate;
     }
 
-    public void setTournamentDate(Date tournamentDate) {
+    public void setTournamentDate(java.sql.Date tournamentDate) {
         this.tournamentDate = tournamentDate;
     }
 
