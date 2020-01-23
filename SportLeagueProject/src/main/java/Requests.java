@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-public class Requests extends JFrame implements ActionListener {
+
+class Requests extends JFrame implements ActionListener {
 
     /** Tabela przyciskow akceptujacych uzytkownikow */
     private JButton[] confirmButton;
@@ -25,15 +26,22 @@ public class Requests extends JFrame implements ActionListener {
         return label;
     }
 
+    /** Konstruktor okna */
     Requests() {
         setTitle("Prośby o utworzenia konta");
+        setLayout(new BorderLayout());
         requestsLogins = DatabaseApplication.queries(new String[]{"requestsLogins"});
+        JPanel panel = new JPanel(new GridLayout(requestsLogins.size(),7,20,10));
+        JScrollPane scrollBar = new JScrollPane(panel,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scrollBar, BorderLayout.CENTER);
 
         List requestsFirstNames = DatabaseApplication.queries(new String[]{"requestsFirstNames"});
         List requestsNames = DatabaseApplication.queries(new String[]{"requestsNames"});
         List requestsPesels = DatabaseApplication.queries(new String[]{"requestsPesels"});
         List requestsPermissions1 = DatabaseApplication.queries(new String[]{"requestsPermissions"});
-        setLayout(new GridLayout(requestsLogins.size()+1,7,10,10));
+
         ArrayList<String> requestsPermissions = new ArrayList<String>();
         for (Object o : requestsPermissions1) {
             if (String.valueOf(o).equals("2")) {
@@ -61,10 +69,13 @@ public class Requests extends JFrame implements ActionListener {
 
         JComponent[][] data = new JComponent[requestsLogins.size()+1][7];
         String[] columnNames = {"Login", "Imię", "Nazwisko", "PESEL", "Poziom Uprawnień", "Zaakceptuj", "Odrzuć"};
+        JPanel headerPanel = new JPanel(new GridLayout(1,7, 0, 10));
         for(int i = 0; i < 7; i++) {
             data[0][i] = labelInitializor(columnNames[i]);
             data[0][i].setFont(new Font("Segoe UI", Font.BOLD, 23));
+            headerPanel.add(data[0][i]);
         }
+        add(headerPanel, BorderLayout.NORTH);
         for(int i = 1; i < requestsLogins.size() + 1; i++) {
             data[i][0] = labelInitializor(String.valueOf(requestsLogins.get(i-1)));
             data[i][1] = labelInitializor(String.valueOf(requestsFirstNames.get(i-1)));
@@ -75,16 +86,16 @@ public class Requests extends JFrame implements ActionListener {
             data[i][6] = declineButton[i-1];
         }
 
-        for (int i = 0; i < requestsLogins.size() + 1; i++) {
+        for (int i = 1; i < requestsLogins.size() + 1; i++) {
             for (int j = 0; j < 7; j++) {
-                add(data[i][j]);
+                panel.add(data[i][j]);
             }
         }
         Dimension windowSize = getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
-        int dx = (centerPoint.x - windowSize.width) / 2;
-        int dy = (centerPoint.y - windowSize.height) / 2;
+        int dx = (centerPoint.x - windowSize.width) / 3;
+        int dy = (centerPoint.y - windowSize.height) / 3;
         setLocation(dx, dy);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -106,5 +117,9 @@ public class Requests extends JFrame implements ActionListener {
                 confirmButton[i].setEnabled(false);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        new Requests();
     }
 }

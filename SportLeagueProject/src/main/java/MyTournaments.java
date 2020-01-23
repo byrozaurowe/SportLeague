@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class MyTournaments extends JFrame implements ActionListener {
+class MyTournaments extends JFrame implements ActionListener {
 
     /** Tabela przyciskow akceptujacych uzytkownikow */
     private JButton[] addMatchButton;
@@ -14,7 +14,7 @@ public class MyTournaments extends JFrame implements ActionListener {
     private JButton[] seeMatchesButton;
     /** Lista loginow */
     private List requestsTournaments;
-
+    /** Id zalogowanego uzytkownika */
     private int userId;
 
     /** Initializator etykiet
@@ -29,6 +29,9 @@ public class MyTournaments extends JFrame implements ActionListener {
         return label;
     }
 
+    /** Konstruktor okna
+     * @param userId Id zalogowanego uzytkownika
+     */
     MyTournaments(int userId) {
         this.userId = userId;
         setLayout(new BorderLayout());

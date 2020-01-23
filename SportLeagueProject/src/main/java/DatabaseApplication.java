@@ -1,7 +1,6 @@
 import TablesClasses.*;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -202,14 +201,20 @@ class DatabaseApplication {
 
         }
         else if(args[0].equals("addUser")) {
-            SQLQuery query = session.createSQLQuery("call dodajUzytkownika(:login, :haslo, :imie, :nazwisko, :pesel, :poziomUprawnien)");
-            query.setParameter("login", args[1]);
-            query.setParameter("haslo", args[2]);
-            query.setParameter("imie", args[3]);
-            query.setParameter("nazwisko", args[4]);
-            query.setParameter("pesel", args[5]);
-            query.setParameter("poziomUprawnien", Integer.parseInt(args[6]));
-            query.executeUpdate();
+            try {
+                SQLQuery query = session.createSQLQuery("call dodajUzytkownika(:login, :haslo, :imie, :nazwisko, :pesel, :poziomUprawnien)");
+                query.setParameter("login", args[1]);
+                query.setParameter("haslo", args[2]);
+                query.setParameter("imie", args[3]);
+                query.setParameter("nazwisko", args[4]);
+                query.setParameter("pesel", args[5]);
+                query.setParameter("poziomUprawnien", Integer.parseInt(args[6]));
+                query.executeUpdate();
+            }
+            catch (Exception e) {
+                result = new ArrayList();
+                result.add("duplicateLogin");
+            }
         }
         else if(args[0].equals("loggIn")) {
             Query query = session.createSQLQuery("call zaloguj(:login, :haslo)");

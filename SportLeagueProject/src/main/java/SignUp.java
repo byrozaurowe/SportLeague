@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SignUp extends JFrame implements ActionListener {
+/** Klasa okna rejestracji */
+ class SignUp extends JFrame implements ActionListener {
     /** Panel glowny */
     private JPanel panel;
     /** Panel pomocniczy na logowanie */
@@ -37,7 +38,7 @@ public class SignUp extends JFrame implements ActionListener {
     /** Combobox z uprawnieniami */
     private JComboBox permissionList;
 
-    /** Konstruktor */
+    /** Konstruktor okna */
      SignUp() {
         super("Rejestracja");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
@@ -128,6 +129,9 @@ public class SignUp extends JFrame implements ActionListener {
         signUpButton.addActionListener(this);
     }
 
+    /** ActionPerformed
+     * @param actionEvent Wydarzenie
+     */
     public void actionPerformed(ActionEvent actionEvent) {
         Object object = actionEvent.getSource();
         if(object == signUpButton) {
@@ -142,10 +146,14 @@ public class SignUp extends JFrame implements ActionListener {
                 else if(permissionList.getSelectedItem().toString().equals("Organizator turnieju")) {
                     permissionLvl = 3;
                 }
-                JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
-                DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
-                        firstNameField.getText(), nameField.getText(), peselField.getText(), String.valueOf(permissionLvl)});
-                this.dispose();
+                if(DatabaseApplication.queries(new String[]{"addUser", loginField.getText(), String.valueOf(passwordField.getPassword()),
+                        firstNameField.getText(), nameField.getText(), peselField.getText(), String.valueOf(permissionLvl)}).size() > 0) {
+                    JOptionPane.showMessageDialog(this, "Użytkownik o takim loginie już istnieje", "Błąd", JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Rejestracja w trakcie weryfikacji", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                }
             }
         }
     }

@@ -6,15 +6,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+/** Okno usuń druzyne */
 class DeleteTeam extends JFrame implements ActionListener {
 
     /** Combobox z drużynami */
-    JComboBox teamListCombobox;
+    private JComboBox teamListCombobox;
     /** Przycisk wykonujący usuniecie */
-    JButton deleteButton;
-
+    private JButton deleteButton;
+    /** Id uzytkownika ktory otwiera to okno */
     private int userId;
 
+    /** Kostrukor okna
+     * @param userId Id uzytkownika ktory otwiera to okno
+     */
     DeleteTeam(int userId) {
         this.userId = userId;
 

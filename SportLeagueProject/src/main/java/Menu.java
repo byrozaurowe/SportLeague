@@ -38,16 +38,17 @@ public class Menu extends JFrame implements ActionListener {
         menuComboBoxList.add("Statystyki zawodników");
         if (permissionLevel == 1) {
             menuComboBoxList.add("Dodaj drużynę");
-            menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
             menuComboBoxList.add("Dodaj turniej");
             menuComboBoxList.add("Moje turnieje");
+            menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Prośby użytkowników");
             menuComboBoxList.add("Wyloguj się");
         }
         else if (permissionLevel == 2) {
             menuComboBoxList.add("Dodaj drużynę");
             menuComboBoxList.add("Dodaj zawodnika");
+            menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Wyloguj się");
         }
         else if (permissionLevel == 3) {
