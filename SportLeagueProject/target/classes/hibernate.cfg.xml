@@ -15,5 +15,6 @@
         <mapping class="TablesClasses.AppUser" resource="AppUser.hbm.xml"/>
         <mapping class="TablesClasses.Player" resource="Player.hbm.xml"/>
         <mapping class="TablesClasses.Tournament" resource="Tournament.hbm.xml"/>
+        <mapping class="TablesClasses.Match" resource="Match.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

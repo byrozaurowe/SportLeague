@@ -66,12 +66,26 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerName")) {
-            Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT name FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerSurname")) {
-            Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerTeam")) {
             //Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
@@ -79,19 +93,52 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
-            Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerSex")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT sex FROM TablesClasses.Player");
             return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT sex FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerBirth")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
             return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerScoredPoints")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
+            return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
+        }
+        else if(args[0].equals("getTeamId")) {
+            Query query = session.createQuery("SELECT teamId FROM TablesClasses.Team WHERE teamName = :name");
+            query.setParameter("name", args[1]);
             return query.list();
         }
         else if(args[0].equals("requestTournaments")) {

@@ -22,5 +22,6 @@
         <property name = "draws" column = "remisy" type = "int"/>
         <property name = "losts" column = "porazki" type = "int"/>
         <property name = "scoredPoints" column = "zdobytePunkty" type = "int"/>
+        <property name = "capitanUserId" column = "idUzytkownikaKapitana" type = "int"/>
     </class>
 </hibernate-mapping>
