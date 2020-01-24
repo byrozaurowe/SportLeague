@@ -25,6 +25,16 @@ public class Match {
 
     @Column(name = "punktyDruzynyDrugiej")
     private int punktyDruzynyDrugiej;
+    @Column(name = "czyZakonczony", nullable = false)
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public int getIdMeczu() { return idMeczu; }
 

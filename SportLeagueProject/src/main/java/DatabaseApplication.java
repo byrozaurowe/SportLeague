@@ -99,12 +99,27 @@ class DatabaseApplication {
             query.setParameter("organizerId", Integer.parseInt(args[1]));
             return query.list();
         }
+        else if(args[0].equals("getTeamNameById")) {
+            Query query = session.createQuery("SELECT teamName FROM TablesClasses.Team WHERE teamId = :teamId");
+            query.setParameter("teamId", Integer.parseInt(args[1]));
+            return query.list();
+        }
+        else if(args[0].equals("tournamentNameById")) {
+            Query query = session.createQuery("SELECT tournamentName FROM TablesClasses.Tournament WHERE tournamentId = :tournamentId");
+            query.setParameter("tournamentId", Integer.parseInt(args[1]));
+            return query.list();
+        }
         else if(args[0].equals("checkPassword")) {
             SQLQuery query = session.createSQLQuery("call sprawdzHaslo(:pass, :id)");
             query.setParameter("pass", args[1]);
             query.setParameter("id", Integer.parseInt(args[2]));
             result = query.list();
             return result;
+        }
+        else if(args[0].equals("requestMatchesByTournamentId")) {
+            Query query = session.createQuery("FROM TablesClasses.Match WHERE idTurnieju = :tournamentId");
+            query.setParameter("tournamentId", Integer.parseInt(args[1]));
+            return query.list();
         }
         else if(args[0].equals("addMatch")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM Match");

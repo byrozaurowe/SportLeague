@@ -102,10 +102,10 @@ class MyTournaments extends JFrame implements ActionListener {
         Object event = actionEvent.getSource();
         for(int i = 0; i < addMatchButton.length; i++) {
             if(event == addMatchButton[i]) {
-                new AddMatch(userId, ((Tournament) requestsTournaments.get(0)).getTournamentId());
+                new AddMatch(userId, ((Tournament) requestsTournaments.get(i)).getTournamentId());
             }
             else if(event == seeMatchesButton[i]) {
-                // tu otwieramy listę meczów turnieju new TournamentMatches(userId, ((Tournament) requestsTournaments.get(0)).getTournamentId())
+                // tu otwieramy listę meczów turnieju new TournamentMatches(userId, ((Tournament) requestsTournaments.get(i)).getTournamentId())
             }
         }
     }
