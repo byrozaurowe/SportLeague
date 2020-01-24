@@ -118,8 +118,4 @@ class Requests extends JFrame implements ActionListener {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new Requests();
-    }
 }

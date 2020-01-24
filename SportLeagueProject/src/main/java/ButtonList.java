@@ -31,6 +31,13 @@ public class ButtonList extends JFrame implements ActionListener {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.type = type;
 
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = (centerPoint.x - windowSize.width) / 2;
+        int dy = (centerPoint.y - windowSize.height) / 2;
+        setLocation(dx, dy);
+
         setVisible(true);
         setTitle("Ultimate Frisbee League");
         Font font = new Font ("Segoe UI", Font.PLAIN, 16);
