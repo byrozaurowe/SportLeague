@@ -8,6 +8,9 @@ import java.util.List;
 public class ButtonList extends JFrame implements ActionListener {
     String[] type;
     JPanel buttonPane;
+    JPanel headerPane;
+    JPanel[] linePane;
+    JScrollPane scrollPane;
     JButton[] buttonTable;
     JLabel[][] teamLabelTable;
     List buttonPaneContentList;
@@ -25,6 +28,7 @@ public class ButtonList extends JFrame implements ActionListener {
     }
 
     public ButtonList(String[] type) {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.type = type;
 
         setVisible(true);
@@ -32,54 +36,74 @@ public class ButtonList extends JFrame implements ActionListener {
         Font font = new Font ("Segoe UI", Font.PLAIN, 16);
 
         buttonPane = new JPanel();
+        headerPane = new JPanel();
 
         if (type[0] == "Drużyny") {
-            buttonPane.add(newLabel("Drużyna"));
+            headerPane.setLayout(new GridLayout(1, 8));
+            headerPane.add(newLabel("Drużyna"));
             buttonPaneContentList = DatabaseApplication.queries(new String[] {"getTeams"});
-            buttonPane.add(newLabel("Miasto"));
+            headerPane.add(newLabel("Miasto"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamCity"}));
-            buttonPane.add(newLabel("Rok założenia"));
+            headerPane.add(newLabel("Rok założenia"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamFoundationYear"}));
-            buttonPane.add(newLabel("Dywizja"));
+            headerPane.add(newLabel("Dywizja"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamDivision"}));
-            buttonPane.add(newLabel("Wygrane"));
+            headerPane.add(newLabel("Wygrane"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamWins"}));
-            buttonPane.add(newLabel("Remisy"));
+            headerPane.add(newLabel("Remisy"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamDraws"}));
-            buttonPane.add(newLabel("Porażki"));
+            headerPane.add(newLabel("Porażki"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamLosts"}));
-            buttonPane.add(newLabel("Zdobyte punkty"));
+            headerPane.add(newLabel("Zdobyte punkty"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"teamPoints"}));
         }
         else if (type[0] == "Turnieje") {
-            buttonPane.add(newLabel("Turniej"));
+            headerPane.setLayout(new GridLayout(1, 4));
+            headerPane.add(newLabel("Turniej"));
             buttonPaneContentList = DatabaseApplication.queries(new String[] {"getTournaments"});
-            buttonPane.add(newLabel("Data"));
+            headerPane.add(newLabel("Data"));
             labelContentList.add(DatabaseApplication.queries(new String[] {"tournamentDate"}));
-            buttonPane.add(newLabel("Miasto"));
+            headerPane.add(newLabel("Miasto"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"tournamentLocation"}));
-            buttonPane.add(newLabel("Dywizja"));
+            headerPane.add(newLabel("Dywizja"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"tournamentDivision"}));
         }
         else if (type[0] == "Statystyki") {
-            buttonPane.add(newLabel("Imię"));
+            headerPane.setLayout(new GridLayout(1, 7));
+            headerPane.add(newLabel("Imię"));
             labelContentList.add(DatabaseApplication.queries(new String[] {"playerName"}));
-            buttonPane.add(newLabel("Nazwisko"));
+            headerPane.add(newLabel("Nazwisko"));
             labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname"}));
-            buttonPane.add(newLabel("Drużyna"));
+            headerPane.add(newLabel("Drużyna"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"playerTeam"}));
-            buttonPane.add(newLabel("Numer zawodnika"));
+            headerPane.add(newLabel("Numer zawodnika"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber"}));
-            buttonPane.add(newLabel("Płeć"));
+            headerPane.add(newLabel("Płeć"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex"}));
-            buttonPane.add(newLabel("Rok urodzenia"));
+            headerPane.add(newLabel("Rok urodzenia"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth"}));
-            buttonPane.add(newLabel("Zdobyte punkty"));
+            headerPane.add(newLabel("Zdobyte punkty"));
             labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints"}));
+        }
+        else if (type[0] == "Zawodnicy") {
+            String druzyna = DatabaseApplication.queries(new String[] {"getTeamId", type[1]}).get(0).toString();
+            headerPane.setLayout(new GridLayout(1, 6));
+            headerPane.add(newLabel("Imię"));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerName", druzyna}));
+            headerPane.add(newLabel("Nazwisko"));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname", druzyna}));
+            headerPane.add(newLabel("Numer zawodnika"));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber", druzyna}));
+            headerPane.add(newLabel("Płeć"));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex", druzyna}));
+            headerPane.add(newLabel("Rok urodzenia"));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth", druzyna}));
+            headerPane.add(newLabel("Zdobyte punkty"));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints", druzyna}));
         }
 
         int listSize;
-        if (type[0] != "Statystyki") {
+        if (type[0] != "Statystyki" && type[0] != "Zawodnicy") {
             listSize = buttonPaneContentList.size();
             buttonTable = new JButton[listSize];
         }
@@ -88,42 +112,54 @@ public class ButtonList extends JFrame implements ActionListener {
         }
         int wid, hei;
         wid = labelContentList.size();
-        if (type[0] != "Statystyki") wid++;
+        if (type[0] != "Statystyki" && type[0] != "Zawodnicy") wid++;
         hei = listSize+1;
-        buttonPane.setLayout(new GridLayout(hei, wid));
+
+        linePane = new JPanel[hei];
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.Y_AXIS));
         teamLabelTable = new JLabel[listSize][labelContentList.size()];
 
         for (int i=0; i<listSize; i++) {
-            if (!type[0].equals("Statystyki")) {
+            linePane[i] = new JPanel();
+            linePane[i].setLayout(new GridLayout(1, wid));
+            if (!type[0].equals("Statystyki") && type[0] != "Zawodnicy") {
                 String text = buttonPaneContentList.get(i).toString();
                 buttonTable[i] = new JButton(text);
-                buttonPane.add(buttonTable[i]);
+                linePane[i].add(buttonTable[i]);
                 buttonTable[i].addActionListener(this);
                 buttonTable[i].setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
                 buttonTable[i].setFont(font);
-                buttonTable[i].setSize(150, 10);
+                buttonTable[i].setSize(150, 15);
             }
             for (int j=0; j<labelContentList.size(); j++) {
                 String labelText = labelContentList.get(j).get(i).toString();
                 teamLabelTable[i][j] = new JLabel(labelText);
                 teamLabelTable[i][j].setFont(font);
                 teamLabelTable[i][j].setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-                teamLabelTable[i][j].setSize(150, 10);
+                teamLabelTable[i][j].setSize(150, 15);
                 teamLabelTable[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 teamLabelTable[i][j].setVerticalAlignment(SwingConstants.CENTER);
-                buttonPane.add(teamLabelTable[i][j]);
+                linePane[i].add(teamLabelTable[i][j]);
             }
+            buttonPane.add(linePane[i]);
         }
 
-        add(buttonPane);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        scrollPane = new JScrollPane(buttonPane,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        setLayout(new BorderLayout());
+        add(headerPane, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+        //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        pack();
+        this.setResizable(false);
     }
 
     public void actionPerformed(ActionEvent e) {
         Object object = e.getSource();
-        /*for (JButton button: buttonTable) {
+        for (JButton button: buttonTable) {
             if (button == object)  {
-                if (type[0] == "Druzyny") {
+                if (type[0] == "Drużyny") {
                     String[] text = new String[2];
                     text[0] = "Zawodnicy";
                     System.out.println(button.getText());
@@ -131,7 +167,7 @@ public class ButtonList extends JFrame implements ActionListener {
                     new ButtonList(text);
                 }
             }
-        } */
+        }
         this.dispose();
     }
 }
