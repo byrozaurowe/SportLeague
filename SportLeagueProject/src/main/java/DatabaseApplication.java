@@ -66,12 +66,26 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerName")) {
-            Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT name FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerSurname")) {
-            Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerTeam")) {
             //Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
@@ -79,24 +93,79 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
-            Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
-            return query.list();
+            if (args.length == 1) {
+                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
+                return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerSex")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT sex FROM TablesClasses.Player");
             return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT sex FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerBirth")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
             return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
         }
         else if(args[0].equals("playerScoredPoints")) {
+            if (args.length == 1) {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
             return query.list();
+            }
+            else {
+                Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player WHERE teamId = :druzyna");
+                query.setParameter("druzyna", Integer.parseInt(args[1]));
+                return query.list();
+            }
+        }
+        else if(args[0].equals("getTeamId")) {
+            Query query = session.createQuery("SELECT teamId FROM TablesClasses.Team WHERE teamName = :name");
+            query.setParameter("name", args[1]);
+            return query.list();
+        }
+        else if(args[0].equals("getMatchById")) {
+            Query query = session.createQuery("FROM TablesClasses.Match WHERE idMeczu = :idMeczu");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
+            result = query.list();
+            return result;
         }
         else if(args[0].equals("requestTournaments")) {
             Query query = session.createQuery("FROM TablesClasses.Tournament WHERE organizerId = :organizerId");
             query.setParameter("organizerId", Integer.parseInt(args[1]));
+            return query.list();
+        }
+        else if(args[0].equals("getTeamNameById")) {
+            Query query = session.createQuery("SELECT teamName FROM TablesClasses.Team WHERE teamId = :teamId");
+            query.setParameter("teamId", Integer.parseInt(args[1]));
+            result = query.list();
+            return result;
+        }
+        else if(args[0].equals("getTeamsIdInMatch")) {
+            Query query = session.createQuery("SELECT idDruzynyPierwszej, idDruzynyDrugiej FROM TablesClasses.Match WHERE idMeczu = :idMeczu");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
+            return query.list();
+        }
+        else if(args[0].equals("tournamentNameById")) {
+            Query query = session.createQuery("SELECT tournamentName FROM TablesClasses.Tournament WHERE tournamentId = :tournamentId");
+            query.setParameter("tournamentId", Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("checkPassword")) {
@@ -105,6 +174,25 @@ class DatabaseApplication {
             query.setParameter("id", Integer.parseInt(args[2]));
             result = query.list();
             return result;
+        }
+        else if(args[0].equals("addScore")) {
+            try {
+                SQLQuery query = session.createSQLQuery("call dodajPunkt(:idMeczu, :idDruzyny, :numerZawodnika, :czyPierwsza)");
+                query.setParameter("idMeczu", Integer.parseInt(args[1]));
+                query.setParameter("idDruzyny", Integer.parseInt(args[2]));
+                query.setParameter("numerZawodnika", Integer.parseInt(args[3]));
+                query.setParameter("czyPierwsza", args[4]);
+                query.executeUpdate();
+            }
+            catch (Exception e) {
+                result = new ArrayList();
+                result.add("wrongNumber");
+            }
+        }
+        else if(args[0].equals("requestMatchesByTournamentId")) {
+            Query query = session.createQuery("FROM TablesClasses.Match WHERE idTurnieju = :tournamentId");
+            query.setParameter("tournamentId", Integer.parseInt(args[1]));
+            return query.list();
         }
         else if(args[0].equals("addMatch")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM Match");

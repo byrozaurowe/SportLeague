@@ -15,6 +15,7 @@ public class Menu extends JFrame implements ActionListener {
     private JButton menuButton;
 
     Menu (int permissionLevel, int userId) {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
         setTitle("Ultimate Frisbee League");
         setPreferredSize(new Dimension(400, 300));
@@ -97,7 +98,7 @@ public class Menu extends JFrame implements ActionListener {
         Object source = e.getSource();
         if (source == menuButton) {
             Object comboBoxSource = menuComboBox.getSelectedItem();
-            String[] text = new String[1];
+            String[] text = new String[2];
             if (comboBoxSource == "Drużyny") {
                 text[0] = "Drużyny";
                 new ButtonList(text);
@@ -107,8 +108,7 @@ public class Menu extends JFrame implements ActionListener {
                 new ButtonList(text);
             }
             else if (comboBoxSource == "Statystyki zawodników") {
-                text[0] = "Statystyki";
-                new ButtonList(text);
+                new StatisticsLimit();
             }
             else if (comboBoxSource == "Dodaj drużynę") {
                 new AddTeam(userId);

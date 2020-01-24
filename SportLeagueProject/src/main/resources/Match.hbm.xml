@@ -19,6 +19,7 @@
         <property name = "punktyDruzynyPierwszej" column = "punktyDruzynyPierwszej" type = "int"/>
         <property name = "punktyDruzynyDrugiej" column = "punktyDruzynyDrugiej" type = "int"/>
         <property name = "idTurnieju" column = "idTurnieju" type = "int"/>
+        <property name = "status" column = "czyZakonczony" type = "boolean"/>
 
 
     </class>
