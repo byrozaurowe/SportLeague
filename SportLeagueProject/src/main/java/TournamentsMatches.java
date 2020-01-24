@@ -18,6 +18,8 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     /** Id zalogowanego uzytkownika */
     private int tournamentId;
 
+    private int userId;
+
     /** Initializator etykiet
      * @param text tekst w etykiecie
      * @return etykieta
@@ -33,7 +35,8 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     /** Konstruktor okna
      * @param tournamentId Id zalogowanego uzytkownika
      */
-    TournamentsMatches(int tournamentId, boolean isOrganizer) {
+    TournamentsMatches(int tournamentId, boolean isOrganizer, int userId) {
+        this.userId = userId;
         this.tournamentId = tournamentId;
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
@@ -55,10 +58,13 @@ public class TournamentsMatches extends JFrame implements ActionListener {
             seeMatchButton[i].addActionListener(this);
         }
         for(int i = 0; i < requestsMatches.size(); i++) {
-            addScoreButton[i] = new JButton("Dodaj wydarzenie");
+            addScoreButton[i] = new JButton("Dodaj zdarzenie");
             addScoreButton[i].setFont(new Font("Segoe UI", Font.PLAIN, 20));
             addScoreButton[i].setHorizontalAlignment(SwingConstants.CENTER);
             addScoreButton[i].addActionListener(this);
+            if(!isOrganizer) {
+                addScoreButton[i].setEnabled(false);
+            }
         }
 
         JComponent[][] data = new JComponent[requestsMatches.size()+1][7];
@@ -68,13 +74,19 @@ public class TournamentsMatches extends JFrame implements ActionListener {
             data[0][i].setFont(new Font("Segoe UI", Font.BOLD, 23));
         }
         for(int i = 1; i < requestsMatches.size() + 1; i++) {
-            data[i][0] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).getIdDruzynyPierwszej()));
-            data[i][2] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).getPunktyDruzynyPierwszej()));
-            data[i][1] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).getIdDruzynyDrugiej()));
+            data[i][0] = labelInitializor(DatabaseApplication.queries(new String []{"getTeamNameById", String.valueOf(((Match) requestsMatches.get(i-1)).getIdDruzynyPierwszej())}).get(0).toString());
+            data[i][1] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).getPunktyDruzynyPierwszej()));
+            data[i][2] = labelInitializor(DatabaseApplication.queries(new String []{"getTeamNameById", String.valueOf(((Match) requestsMatches.get(i-1)).getIdDruzynyDrugiej())}).get(0).toString());
             data[i][3] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).getPunktyDruzynyDrugiej()));
-            data[i][4] = labelInitializor(String.valueOf(((Match) requestsMatches.get(i-1)).isStatus()));
             data[i][5] = seeMatchButton[i-1];
             data[i][6] = addScoreButton[i-1];
+            if(((Match) requestsMatches.get(i-1)).isStatus() == true) {
+                data[i][4] = labelInitializor("Zakończony");
+                data[i][6].setEnabled(false);
+            }
+            else {
+                data[i][4] = labelInitializor("W trakcie...");
+            }
         }
 
         JPanel headerPanel = new JPanel(new GridLayout(1,6, 10, 10));
@@ -91,7 +103,7 @@ public class TournamentsMatches extends JFrame implements ActionListener {
         Dimension windowSize = getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
-        int dx = (centerPoint.x - windowSize.width) / 2;
+        int dx = (centerPoint.x - windowSize.width) / 8;
         int dy = (centerPoint.y - windowSize.height) / 2;
         setLocation(dx, dy);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -107,12 +119,9 @@ public class TournamentsMatches extends JFrame implements ActionListener {
 
             }
             else if(event == addScoreButton[i]) {
-
+                new AddScore(((Match) requestsMatches.get(i)).getIdMeczu(), userId);
+                this.dispose();
             }
         }
-    }
-
-    public static void main(String[] args) {
-        new TournamentsMatches(1, true);
     }
 }

@@ -141,6 +141,12 @@ class DatabaseApplication {
             query.setParameter("name", args[1]);
             return query.list();
         }
+        else if(args[0].equals("getMatchById")) {
+            Query query = session.createQuery("FROM TablesClasses.Match WHERE idMeczu = :idMeczu");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
+            result = query.list();
+            return result;
+        }
         else if(args[0].equals("requestTournaments")) {
             Query query = session.createQuery("FROM TablesClasses.Tournament WHERE organizerId = :organizerId");
             query.setParameter("organizerId", Integer.parseInt(args[1]));
@@ -149,6 +155,12 @@ class DatabaseApplication {
         else if(args[0].equals("getTeamNameById")) {
             Query query = session.createQuery("SELECT teamName FROM TablesClasses.Team WHERE teamId = :teamId");
             query.setParameter("teamId", Integer.parseInt(args[1]));
+            result = query.list();
+            return result;
+        }
+        else if(args[0].equals("getTeamsIdInMatch")) {
+            Query query = session.createQuery("SELECT idDruzynyPierwszej, idDruzynyDrugiej FROM TablesClasses.Match WHERE idMeczu = :idMeczu");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("tournamentNameById")) {
@@ -162,6 +174,20 @@ class DatabaseApplication {
             query.setParameter("id", Integer.parseInt(args[2]));
             result = query.list();
             return result;
+        }
+        else if(args[0].equals("addScore")) {
+            try {
+                SQLQuery query = session.createSQLQuery("call dodajPunkt(:idMeczu, :idDruzyny, :numerZawodnika, :czyPierwsza)");
+                query.setParameter("idMeczu", Integer.parseInt(args[1]));
+                query.setParameter("idDruzyny", Integer.parseInt(args[2]));
+                query.setParameter("numerZawodnika", Integer.parseInt(args[3]));
+                query.setParameter("czyPierwsza", args[4]);
+                query.executeUpdate();
+            }
+            catch (Exception e) {
+                result = new ArrayList();
+                result.add("wrongNumber");
+            }
         }
         else if(args[0].equals("requestMatchesByTournamentId")) {
             Query query = session.createQuery("FROM TablesClasses.Match WHERE idTurnieju = :tournamentId");

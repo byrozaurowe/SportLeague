@@ -105,7 +105,7 @@ class MyTournaments extends JFrame implements ActionListener {
                 new AddMatch(userId, ((Tournament) requestsTournaments.get(i)).getTournamentId());
             }
             else if(event == seeMatchesButton[i]) {
-                // tu otwieramy listę meczów turnieju new TournamentMatches(userId, ((Tournament) requestsTournaments.get(i)).getTournamentId())
+                new TournamentsMatches(userId, true, userId);
             }
         }
     }
