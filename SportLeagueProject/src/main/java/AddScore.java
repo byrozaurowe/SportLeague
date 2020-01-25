@@ -1,7 +1,3 @@
-import TablesClasses.Match;
-import TablesClasses.Player;
-import org.hibernate.cfg.JDBCBinder;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

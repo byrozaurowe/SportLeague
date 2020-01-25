@@ -4,10 +4,10 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "TablesClasses.Team" table = "druzyna">
+    <class name = "Team" table = "druzyna">
 
         <meta attribute = "class-description">
-            This class contains TablesClasses.Team data
+            This class contains Team data
         </meta>
 
         <id name = "teamId" type = "int" column = "idDruzyny">

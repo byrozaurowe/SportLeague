@@ -1,6 +1,3 @@
-import TablesClasses.Match;
-import TablesClasses.Tournament;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -136,7 +133,12 @@ public class TournamentsMatches extends JFrame implements ActionListener {
                 }
             }
             if(event == seeMatchButton[i]) {
-
+                if(DatabaseApplication.queries(new String[]{"matchDetailsByMatchId", String.valueOf(((Match)requestsMatches.get(i)).getIdMeczu())}).size() > 0) {
+                    new MatchDetails(((Match)requestsMatches.get(i)).getIdMeczu());
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Brak zdobytych punktów", "Informacja", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         }
     }

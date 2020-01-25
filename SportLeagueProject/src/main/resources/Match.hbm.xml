@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "TablesClasses.Match" table = "mecz">
+    <class name = "Match" table = "mecz">
 
         <meta attribute = "class-description">
             This class contains the games details.
