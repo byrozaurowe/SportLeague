@@ -1,5 +1,7 @@
 import TablesClasses.Match;
 import TablesClasses.Player;
+import org.hibernate.cfg.JDBCBinder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,8 @@ class AddScore extends JFrame implements ActionListener {
     private JButton endMatchButton;
     /** Id uzytkownika */
     private int userId;
+    /** Przycisk cofniecia ostatniego ruchu */
+    private JButton deleteRecentEventButton;
 
     /** Kostrukor okna
      * @param matchId Id uzytkownika ktory otwiera to okno
@@ -28,7 +32,9 @@ class AddScore extends JFrame implements ActionListener {
     AddScore(int matchId, int userId) {
         this.matchId = matchId;
         this.userId = userId;
-        setLayout(new FlowLayout(1, 30,15));
+        JPanel addScorePanel = new JPanel(new FlowLayout(1, 30,15));
+        JPanel otherEventPanel = new JPanel(new FlowLayout(1, 30,15));
+        setLayout(new GridLayout(2,1,10,10));
         setTitle("Dodaj punkt");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
         List teamsInMatch = DatabaseApplication.queries(new String [] {"getMatchById", String.valueOf(matchId)});
@@ -37,6 +43,10 @@ class AddScore extends JFrame implements ActionListener {
         teamsNames.add(String.valueOf(DatabaseApplication.queries(new String [] {"getTeamNameById", String.valueOf(((Match) teamsInMatch.get(0)).getIdDruzynyDrugiej())}).get(0)));
         JLabel teamNameLabel = new JLabel("Wpisz numer zawodnika, który zdobył punkt lub zakończ mecz");
         teamNameLabel.setFont(font);
+
+        deleteRecentEventButton = new JButton("Cofnij ostatni punkt");
+        deleteRecentEventButton.setFont(font);
+        deleteRecentEventButton.addActionListener(this);
 
         teamBox = new JComboBox(teamsNames.toArray());
         teamBox.setFont(font);
@@ -52,11 +62,14 @@ class AddScore extends JFrame implements ActionListener {
         playerNumberField = new JTextField(3);
         playerNumberField.setFont(font);
 
-        add(teamNameLabel);
-        add(teamBox);
-        add(playerNumberField);
-        add(addScoreButton);
-        add(endMatchButton);
+        addScorePanel.add(teamNameLabel);
+        addScorePanel.add(teamBox);
+        addScorePanel.add(playerNumberField);
+        addScorePanel.add(addScoreButton);
+        otherEventPanel.add(deleteRecentEventButton);
+        otherEventPanel.add(endMatchButton);
+        add(addScorePanel);
+        add(otherEventPanel);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -95,8 +108,17 @@ class AddScore extends JFrame implements ActionListener {
                 this.dispose();
             }
         }
-        if(event == endMatchButton) {
-            // TODO procedura koniec meczu
+        else if(event == endMatchButton) {
+            if(DatabaseApplication.queries(new String[]{"endMatch", String.valueOf(matchId)}).size() > 0) {
+                JOptionPane.showMessageDialog(null, "Coś poszło nie tak, spróbuj ponownie", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Mecz został zakończony", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        else if(event == deleteRecentEventButton) {
+            DatabaseApplication.queries(new String[]{"deleteRecentEvent", String.valueOf(matchId)});
+            JOptionPane.showMessageDialog(this, "Ruch został cofnięty", "Sukces", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

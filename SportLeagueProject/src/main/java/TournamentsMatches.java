@@ -17,8 +17,10 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     private List requestsMatches;
     /** Id zalogowanego uzytkownika */
     private int tournamentId;
-
+    /** Id uzytkownika */
     private int userId;
+    /** Czy włączony jest tryb widza */
+    private boolean isSpectatorMode;
 
     /** Initializator etykiet
      * @param text tekst w etykiecie
@@ -35,19 +37,28 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     /** Konstruktor okna
      * @param tournamentId Id zalogowanego uzytkownika
      */
-    TournamentsMatches(int tournamentId, boolean isOrganizer, int userId) {
+    TournamentsMatches(int tournamentId, int userId, boolean isSpectatorMode) {
         this.userId = userId;
         this.tournamentId = tournamentId;
+        this.isSpectatorMode = isSpectatorMode;
+
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         JScrollPane scrollBar = new JScrollPane(panel,
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollBar, BorderLayout.CENTER);
+
+        int columnsNumber = 7;
+
+        if(isSpectatorMode) {
+            columnsNumber = 6;
+        }
+
         setTitle("Mecze w turnieju " + DatabaseApplication.queries(new String[]{"tournamentNameById", String.valueOf(tournamentId)}).get(0));
 
         requestsMatches = DatabaseApplication.queries(new String[]{"requestMatchesByTournamentId", String.valueOf(tournamentId)});
-        panel.setLayout(new GridLayout(requestsMatches.size(),6,10,10));
+        panel.setLayout(new GridLayout(requestsMatches.size(), columnsNumber,10,10));
 
         seeMatchButton = new JButton[requestsMatches.size()];
         addScoreButton = new JButton[requestsMatches.size()];
@@ -62,14 +73,14 @@ public class TournamentsMatches extends JFrame implements ActionListener {
             addScoreButton[i].setFont(new Font("Segoe UI", Font.PLAIN, 20));
             addScoreButton[i].setHorizontalAlignment(SwingConstants.CENTER);
             addScoreButton[i].addActionListener(this);
-            if(!isOrganizer) {
+            if(isSpectatorMode) {
                 addScoreButton[i].setEnabled(false);
             }
         }
 
         JComponent[][] data = new JComponent[requestsMatches.size()+1][7];
         String[] columnNames = {"Drużyna pierwsza", "Punkty", "Drużyna druga", "Punkty", "Status", "Zobacz szczegóły", "Dodaj zdarzenie"};
-        for(int i = 0; i < columnNames.length; i++) {
+        for(int i = 0; i < columnsNumber; i++) {
             data[0][i] = labelInitializor(columnNames[i]);
             data[0][i].setFont(new Font("Segoe UI", Font.BOLD, 23));
         }
@@ -89,14 +100,17 @@ public class TournamentsMatches extends JFrame implements ActionListener {
             }
         }
 
-        JPanel headerPanel = new JPanel(new GridLayout(1,6, 10, 10));
-        for(int i = 0; i < columnNames.length; i++) {
+        JPanel headerPanel = new JPanel(new GridLayout(1, columnsNumber, 10, 10));
+        for(int i = 0; i < columnsNumber; i++) {
             headerPanel.add(data[0][i]);
         }
         add(headerPanel, BorderLayout.NORTH);
 
         for (int i = 1; i < requestsMatches.size() + 1; i++) {
             for (int j = 0; j < columnNames.length; j++) {
+                if(j == 6 && isSpectatorMode) {
+                    continue;
+                }
                 panel.add(data[i][j]);
             }
         }
@@ -115,13 +129,19 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object event = actionEvent.getSource();
         for(int i = 0; i < seeMatchButton.length; i++) {
+            if(!isSpectatorMode) {
+                if (event == addScoreButton[i]) {
+                    new AddScore(((Match) requestsMatches.get(i)).getIdMeczu(), userId);
+                    this.dispose();
+                }
+            }
             if(event == seeMatchButton[i]) {
 
             }
-            else if(event == addScoreButton[i]) {
-                new AddScore(((Match) requestsMatches.get(i)).getIdMeczu(), userId);
-                this.dispose();
-            }
         }
+    }
+
+    public static void main(String[] args) {
+        new TournamentsMatches(1,0, true);
     }
 }

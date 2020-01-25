@@ -128,7 +128,7 @@ public class Menu extends JFrame implements ActionListener {
                 new AddTournament(userId);
             }
             else if (comboBoxSource == "Moje turnieje") {
-                new MyTournaments(userId);
+                new MyTournaments(userId, false);
             }
             else if(comboBoxSource == "Prośby użytkowników") {
                 if(Integer.parseInt(String.valueOf(DatabaseApplication.queries(new String[]{"userCounter"}).get(0))) > 0) {

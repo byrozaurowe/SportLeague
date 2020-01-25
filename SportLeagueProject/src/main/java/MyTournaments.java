@@ -16,6 +16,8 @@ class MyTournaments extends JFrame implements ActionListener {
     private List requestsTournaments;
     /** Id zalogowanego uzytkownika */
     private int userId;
+    /** Czy wlaczony jest tryb widza */
+    private boolean isSpectatorMode;
 
     /** Initializator etykiet
      * @param text tekst w etykiecie
@@ -32,8 +34,10 @@ class MyTournaments extends JFrame implements ActionListener {
     /** Konstruktor okna
      * @param userId Id zalogowanego uzytkownika
      */
-    MyTournaments(int userId) {
+    MyTournaments(int userId, boolean isSpectatorMode) {
         this.userId = userId;
+        this.isSpectatorMode = isSpectatorMode;
+
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         JScrollPane scrollBar = new JScrollPane(panel,
@@ -43,7 +47,8 @@ class MyTournaments extends JFrame implements ActionListener {
         setTitle("Moje turnieje");
 
         requestsTournaments = DatabaseApplication.queries(new String[]{"requestTournaments", String.valueOf(userId)});
-        panel.setLayout(new GridLayout(requestsTournaments.size(),6,10,10));
+
+        panel.setLayout(new GridLayout(requestsTournaments.size(), 6,10,10));
 
         addMatchButton = new JButton[requestsTournaments.size()];
         seeMatchesButton = new JButton[requestsTournaments.size()];
@@ -75,7 +80,7 @@ class MyTournaments extends JFrame implements ActionListener {
             data[i][5] = seeMatchesButton[i-1];
         }
 
-        JPanel headerPanel = new JPanel(new GridLayout(1,6, 0, 10));
+        JPanel headerPanel = new JPanel(new GridLayout(1, 6, 0, 10));
         for(int i = 0; i < 6; i++) {
             headerPanel.add(data[0][i]);
         }
@@ -101,11 +106,11 @@ class MyTournaments extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object event = actionEvent.getSource();
         for(int i = 0; i < addMatchButton.length; i++) {
-            if(event == addMatchButton[i]) {
+            if (event == addMatchButton[i]) {
                 new AddMatch(userId, ((Tournament) requestsTournaments.get(i)).getTournamentId());
             }
             else if(event == seeMatchesButton[i]) {
-                new TournamentsMatches(userId, true, userId);
+                new TournamentsMatches(((Tournament) requestsTournaments.get(i)).getTournamentId(), userId, isSpectatorMode);
             }
         }
     }

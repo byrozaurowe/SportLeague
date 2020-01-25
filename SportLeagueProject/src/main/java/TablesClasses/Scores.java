@@ -12,9 +12,9 @@ class Scores {
     private int matchId;
     @Column(name = "idZawodnika", nullable = false)
     private int playerId;
-    @Column(name = "punktacjaDruzynyPierwszejPoPunkcie", nullable = false)
+    @Column(name = "punktyDruzynyPierwszejPoPunkcie", nullable = false)
     private int teamOneScoreAfterPoint;
-    @Column(name = "punktacjaDruzynyDrugiejPoPunkcie", nullable = false)
+    @Column(name = "punktyDruzynyDrugiejPoPunkcie", nullable = false)
     private int teamTwoScoreAfterPoint;
 
     public int getId() {

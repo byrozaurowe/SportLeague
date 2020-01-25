@@ -168,6 +168,14 @@ class DatabaseApplication {
             query.setParameter("tournamentId", Integer.parseInt(args[1]));
             return query.list();
         }
+        else if(args[0].equals("deleteRecentEvent")) {
+            Query query = session.createSQLQuery("SELECT id FROM punktacjameczu WHERE idMeczu = :idMeczu ORDER BY id DESC LIMIT 1");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
+            result = query.list();
+            query = session.createSQLQuery("DELETE FROM punktacjameczu WHERE id = :id");
+            query.setParameter("id", Integer.parseInt(result.get(0).toString()));
+            query.executeUpdate();
+        }
         else if(args[0].equals("checkPassword")) {
             SQLQuery query = session.createSQLQuery("call sprawdzHaslo(:pass, :id)");
             query.setParameter("pass", args[1]);
@@ -187,6 +195,17 @@ class DatabaseApplication {
             catch (Exception e) {
                 result = new ArrayList();
                 result.add("wrongNumber");
+            }
+        }
+        else if(args[0].equals("endMatch")) {
+            try {
+                SQLQuery query = session.createSQLQuery("call zakonczMecz(:idMeczu)");
+                query.setParameter("idMeczu", Integer.parseInt(args[1]));
+                query.executeUpdate();
+            }
+            catch (Exception e) {
+                result = new ArrayList();
+                result.add("smthWentWrong");
             }
         }
         else if(args[0].equals("requestMatchesByTournamentId")) {

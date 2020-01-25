@@ -4,25 +4,28 @@
   <OriginalElement />
   <nodes>
     <node x="0.0" y="284.0">Logging</node>
-    <node x="140.0" y="284.0">TablesClasses.Player</node>
-    <node x="273.0" y="284.0">SignUp</node>
-    <node x="0.0" y="355.0">TablesClasses.Match</node>
+    <node x="0.0" y="355.0">TablesClasses.Player</node>
+    <node x="133.0" y="355.0">SignUp</node>
+    <node x="266.0" y="355.0">TablesClasses.Match</node>
     <node x="0.0" y="71.0">HibernateUtil</node>
-    <node x="161.0" y="142.0">AddPlayer</node>
-    <node x="147.0" y="213.0">TablesClasses.AppUser</node>
+    <node x="322.0" y="142.0">AddPlayer</node>
+    <node x="364.0" y="71.0">MyTournaments</node>
+    <node x="280.0" y="284.0">TablesClasses.AppUser</node>
     <node x="0.0" y="213.0">Requests</node>
-    <node x="315.0" y="142.0">AddMatch</node>
-    <node x="182.0" y="71.0">TablesClasses.Tournament</node>
-    <node x="224.0" y="0.0">AddTournament</node>
-    <node x="245.0" y="355.0">Menu</node>
+    <node x="224.0" y="0.0">StatisticsLimit</node>
+    <node x="147.0" y="213.0">AddMatch</node>
+    <node x="294.0" y="213.0">AddScore</node>
+    <node x="0.0" y="142.0">TablesClasses.Tournament</node>
+    <node x="182.0" y="71.0">AddTournament</node>
+    <node x="392.0" y="355.0">Menu</node>
     <node x="0.0" y="0.0">DatabaseApplication</node>
-    <node x="287.0" y="213.0">AddTeam</node>
-    <node x="0.0" y="142.0">ButtonList</node>
-    <node x="126.0" y="355.0">TablesClasses.Team</node>
+    <node x="140.0" y="284.0">AddTeam</node>
+    <node x="161.0" y="142.0">ButtonList</node>
+    <node x="0.0" y="426.0">TablesClasses.Team</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="1.0" x="403.5" y="75.0" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="404.0" y="75.0" />
   <SelectedNodes />
   <Categories />
   <SCOPE>All</SCOPE>
