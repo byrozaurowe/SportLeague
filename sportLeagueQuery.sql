@@ -60,6 +60,8 @@ CREATE TABLE Druzyna (
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("71 Wratislavia", "Wrocław", 2014, "Mixed", 1);
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("BLOW", "Wrocław", 2010, "Mixed", 1);
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("KWR Knury", "Kamieniec Wrocławski", 2012, "Mixed", 1);
+INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("GSH", "Wrocław", 2012, "Open", 1);
+SELECT * FROM druzyna;
 
 CREATE TABLE Turniej (
 idTurnieju int auto_increment primary key not null,
@@ -76,7 +78,7 @@ imie varchar(20) not null,
 nazwisko varchar(20) not null,
 plec enum("Mężczyzna", "Kobieta") not null,
 rokUrodzenia int not null,
-numerZawodnika int not null,
+numerZawodnika int not null unique,
 zdobytePunkty int default 0,
 foreign key (idDruzyny) references Druzyna(idDruzyny)
 );
@@ -98,10 +100,8 @@ idMeczu int not null,
 idZawodnika int not null,
 punktyDruzynyPierwszejPoPunkcie int not null,
 punktyDruzynyDrugiejPoPunkcie int not null,
-idDruzyny int not null,
 foreign key (idMeczu) references Mecz(idMeczu),
-foreign key (idZawodnika) references Zawodnik(idZawodnika),
-foreign key (idDruzyny) references Druzyna(idDruzyny)
+foreign key (idZawodnika) references Zawodnik(idZawodnika)
 );
 
 DELIMITER //
@@ -119,10 +119,45 @@ START TRANSACTION;
 		UPDATE mecz SET punktyDruzynyDrugiej = punktyDruzynyDrugiej + 1 WHERE idMeczu = meczuId AND idDruzynyDrugiej = druzynyId;
     END IF;
     UPDATE zawodnik SET zdobytePunkty = zdobytePunkty + 1 WHERE idDruzyny = druzynyId AND numerZawodnika = zawodnikaNumer;
-    INSERT INTO punktacjaMeczu (idMeczu, idZawodnika, punktyDruzynyPierwszejPoPunkcie, punktyDruzynyDrugiejPoPunkcie, idDruzyny) VALUES (meczuId, 
+    INSERT INTO punktacjaMeczu (idMeczu, idZawodnika, punktyDruzynyPierwszejPoPunkcie, punktyDruzynyDrugiejPoPunkcie) VALUES (meczuId, 
 		(SELECT idZawodnika FROM Zawodnik WHERE idDruzyny = druzynyId AND numerZawodnika = zawodnikaNumer), 
-		(SELECT punktyDruzynyPierwszej FROM mecz WHERE idMeczu = meczuId), (SELECT punktyDruzynyDrugiej FROM mecz WHERE idMeczu = meczuId), druzynyId);
+		(SELECT punktyDruzynyPierwszej FROM mecz WHERE idMeczu = meczuId), (SELECT punktyDruzynyDrugiej FROM mecz WHERE idMeczu = meczuId));
 COMMIT;
+END //
+
+use sportLeague;
+DROP TRIGGER IF EXISTS sprawdzWiek;
+DELIMITER //
+CREATE TRIGGER sprawdzWiek
+BEFORE INSERT ON zawodnik 
+FOR EACH ROW
+BEGIN
+	IF YEAR(CURRENT_DATE) - NEW.rokUrodzenia < 18 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid date!';
+	END IF;
+END //
+DROP TRIGGER IF EXISTS sprawdzDywizje;
+DELIMITER //
+CREATE TRIGGER sprawdzDywizje
+BEFORE INSERT ON zawodnik
+FOR EACH ROW
+BEGIN
+	IF NEW.plec = "Kobieta" AND (SELECT dywizja FROM druzyna WHERE idDruzyny = NEW.idDruzyny) = "Open" THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Baba nie moze grac w open!';
+	END IF;
+	IF NEW.plec = "Mężczyzna" AND (SELECT dywizja FROM druzyna WHERE idDruzyny = NEW.idDruzyny) = "Women" THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Wrong team for this player!';
+	END IF;
+END //
+DROP TRIGGER IF EXISTS sprawdzNumer;
+DELIMITER //
+CREATE TRIGGER sprawdzNumer
+BEFORE INSERT ON zawodnik
+FOR EACH ROW
+BEGIN
+	IF EXISTS (SELECT numerZawodnika FROM zawodnik WHERE idDruzyny = NEW.idDruzyny AND numerZawodnika = NEW.numerZawodnika) THEN
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Player with this number already exists!';
+                END IF;
 END //
 
 DELIMITER //
@@ -168,7 +203,7 @@ BEGIN
 	DELETE FROM punktacjameczu WHERE idMeczu = OLD.idMeczu;
 END //
 
-DROP TRIGGER IF EXISTS usunStatystykiZawodnikaPoUsunieciuPunkta;
+DROP TRIGGER IF EXISTS poUsunieciuPunkta;
 DELIMITER //
 CREATE TRIGGER poUsunieciuPunkta
 BEFORE DELETE ON punktacjaMeczu
@@ -176,21 +211,25 @@ FOR EACH ROW
 BEGIN
 DECLARE idPierwszej INT DEFAULT (SELECT idDruzynyPierwszej FROM mecz WHERE idMeczu = OLD.idMeczu);
 DECLARE idDrugiej INT DEFAULT (SELECT idDruzynyDrugiej FROM mecz WHERE idMeczu = OLD.idMeczu);
+DECLARE druzynyId INT DEFAULT (SELECT idDruzyny FROM zawodnik WHERE idZawodnika = OLD.idZawodnika);
 	UPDATE zawodnik SET zdobytePunkty = zdobytePunkty - 1 WHERE idZawodnika = OLD.idZawodnika;
-    IF idPierwszej = OLD.idDruzyny THEN
+    IF idPierwszej = druzynyId THEN
 		UPDATE mecz SET punktyDruzynyPierwszej = punktyDruzynyPierwszej - 1 WHERE idMeczu = OLD.idMeczu;
-    ELSEIF idDrugiej = OLD.idDruzyny THEN
+    ELSEIF idDrugiej = druzynyId THEN
 		UPDATE mecz SET punktyDruzynyDrugiej = punktyDruzynyDrugiej - 1 WHERE idMeczu = OLD.idMeczu;
     END IF;
 END //
+
+
 
 INSERT INTO Mecz (idDruzynyPierwszej, idDruzynyDrugiej, punktyDruzynyPierwszej, punktyDruzynyDrugiej, idTurnieju, czyZakonczony) VALUES (1, 2, 0, 0, 1, false);
 INSERT INTO Turniej (nazwaTurnieju, dataTurnieju, miejsce, dywizjaTurnieju, idOrganizatora) VALUES ("Poligon", "2020-10-10", "Zabrze", "Mixed", 1);
 INSERT INTO Turniej (nazwaTurnieju, dataTurnieju, miejsce, dywizjaTurnieju, idOrganizatora) VALUES ("Windmill", "2018-07-19", "Amsterdam", "Mixed", 1);
 INSERT INTO Turniej (nazwaTurnieju, dataTurnieju, miejsce, dywizjaTurnieju, idOrganizatora) VALUES ("Mistrzostwa Polski", "2010-01-10", "Warszawa", "Open/Women", 1);
 INSERT INTO Turniej (nazwaTurnieju, dataTurnieju, miejsce, dywizjaTurnieju, idOrganizatora) VALUES ("WLU", "2020-05-09", "Warszawa", "Open", 1);
-INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (3, "Wiktoria", "Pyra", "Kobieta", 1999, 51);
+INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (1, "Wiktoria", "Pyra", "Kobieta", 2001, 52);
 INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (3, "Klaudia", "Wrońska", "Kobieta", 1998, 7);
 INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (1, "Maciej", "Adamski", "Mężczyzna", 1998, 3);
 INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (2, "Natalia", "Nędzi", "Kobieta", 2001, 13);
-INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (2, "Paulina", "Dul", "Kobieta", 1995, 1);
+INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (1, "Paulina", "Dul", "Kobieta", 1995, 1);
+INSERT INTO ZAWODNIK (idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (4, "Jakas", "Baba", "Kobieta", 1995, 19);
