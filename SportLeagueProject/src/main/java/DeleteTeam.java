@@ -1,3 +1,5 @@
+import TablesClasses.Team;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

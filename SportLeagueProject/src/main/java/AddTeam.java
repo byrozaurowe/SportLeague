@@ -93,9 +93,15 @@ public class AddTeam extends JFrame implements ActionListener {
         panel.add(panel2, BorderLayout.SOUTH);
         add(panel);
 
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+        int dx = (centerPoint.x - windowSize.width) / 2;
+        int dy = (centerPoint.y - windowSize.height) / 2;
+        setLocation(dx, dy);
+
         setVisible(true);
         setResizable(false);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
     }

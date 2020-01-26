@@ -1,3 +1,5 @@
+import TablesClasses.Match;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -113,8 +115,12 @@ class AddScore extends JFrame implements ActionListener {
             }
         }
         else if(event == deleteRecentEventButton) {
-            DatabaseApplication.queries(new String[]{"deleteRecentEvent", String.valueOf(matchId)});
-            JOptionPane.showMessageDialog(this, "Ruch został cofnięty", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+            if(DatabaseApplication.queries(new String[]{"deleteRecentEvent", String.valueOf(matchId)}).size() > 0) {
+                JOptionPane.showMessageDialog(this, "Brak ruchów do cofnięcia", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Ruch został cofnięty", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 }

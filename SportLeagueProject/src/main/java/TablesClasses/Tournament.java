@@ -1,3 +1,5 @@
+package TablesClasses;
+
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Table;

@@ -1,3 +1,7 @@
+import TablesClasses.Match;
+import TablesClasses.Player;
+import TablesClasses.Scores;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -5,7 +9,7 @@ import java.util.List;
 class MatchDetails extends JFrame {
 
     /** Lista loginow */
-    private List matchDetailsList;
+    private List scoresList;
 
     /** Initializator etykiet
      * @param text tekst w etykiecie
@@ -36,24 +40,24 @@ class MatchDetails extends JFrame {
         String[] columnNames = {String.valueOf(DatabaseApplication.queries(new String[]{"getTeamNameById", String.valueOf(((Match) thisMatch.get(0)).getIdDruzynyPierwszej())}).get(0)),
                 String.valueOf(DatabaseApplication.queries(new String[]{"getTeamNameById", String.valueOf(((Match) thisMatch.get(0)).getIdDruzynyDrugiej())}).get(0)),
                 "Imię zdobywającego", "Nazwisko zdobywającego", "Numer zawodnika", "Nazwa drużyny"};
-        matchDetailsList = DatabaseApplication.queries(new String[]{"matchDetailsByMatchId", String.valueOf(matchId)});
-        panel.setLayout(new GridLayout(matchDetailsList.size(), columnNames.length,10,10));
+        scoresList = DatabaseApplication.queries(new String[]{"matchDetailsByMatchId", String.valueOf(matchId)});
+        panel.setLayout(new GridLayout(scoresList.size(), columnNames.length,10,10));
 
-        JComponent[][] data = new JComponent[matchDetailsList.size()+1][6];
+        JComponent[][] data = new JComponent[scoresList.size()+1][6];
 
         for(int i = 0; i < columnNames.length; i++) {
             data[0][i] = labelInitializor(columnNames[i]);
             data[0][i].setFont(new Font("Segoe UI", Font.BOLD, 23));
         }
 
-        for(int i = 1; i < matchDetailsList.size() + 1; i++) {
-            data[i][0] = labelInitializor(String.valueOf(((Scores) matchDetailsList.get(i-1)).getTeamOneScoreAfterPoint()));
-            data[i][1] = labelInitializor(String.valueOf(((Scores) matchDetailsList.get(i-1)).getTeamTwoScoreAfterPoint()));
-            List playerList = DatabaseApplication.queries(new String []{"playerById", String.valueOf(((Scores) matchDetailsList.get(i-1)).getPlayerId())});
-            data[i][2] = labelInitializor(((Player) playerList.get(i-1)).getName());
-            data[i][3] = labelInitializor(((Player) playerList.get(i-1)).getSurname());
-            data[i][4] = labelInitializor(String.valueOf(((Player) playerList.get(i-1)).getPlayerNumber()));
-            data[i][5] = labelInitializor(DatabaseApplication.queries(new String []{"getTeamNameById", String.valueOf(((Player) playerList.get(i-1)).getTeamId())}).get(0).toString());
+        for(int i = 1; i < scoresList.size() + 1; i++) {
+            data[i][0] = labelInitializor(String.valueOf(((Scores) scoresList.get(i-1)).getTeamOneScoreAfterPoint()));
+            data[i][1] = labelInitializor(String.valueOf(((Scores) scoresList.get(i-1)).getTeamTwoScoreAfterPoint()));
+            List playerList = DatabaseApplication.queries(new String []{"playerById", String.valueOf(((Scores) scoresList.get(i-1)).getPlayerId())});
+            data[i][2] = labelInitializor(((Player) playerList.get(0)).getName());
+            data[i][3] = labelInitializor(((Player) playerList.get(0)).getSurname());
+            data[i][4] = labelInitializor(String.valueOf(((Player) playerList.get(0)).getPlayerNumber()));
+            data[i][5] = labelInitializor(DatabaseApplication.queries(new String []{"getTeamNameById", String.valueOf(((Player) playerList.get(0)).getTeamId())}).get(0).toString());
         }
 
         JPanel headerPanel = new JPanel(new GridLayout(1, columnNames.length, 10, 10));
@@ -62,7 +66,7 @@ class MatchDetails extends JFrame {
         }
         add(headerPanel, BorderLayout.NORTH);
 
-        for (int i = 1; i < matchDetailsList.size() + 1; i++) {
+        for (int i = 1; i < scoresList.size() + 1; i++) {
             for (int j = 0; j < columnNames.length; j++) {
                 panel.add(data[i][j]);
             }
@@ -77,9 +81,5 @@ class MatchDetails extends JFrame {
         setResizable(false);
         setVisible(true);
         pack();
-    }
-
-    public static void main(String[] args) {
-        new MatchDetails(1);
     }
 }

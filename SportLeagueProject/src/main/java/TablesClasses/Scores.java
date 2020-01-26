@@ -1,11 +1,14 @@
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+package TablesClasses;
+
+import javax.persistence.*;
 
 @Entity
-public
-class Scores {
+@Table(name = "punktacjameczu", schema = "sportleague", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id")})
+public class Scores {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private int id;
     @Column(name = "idMeczu", nullable = false)
     private int matchId;

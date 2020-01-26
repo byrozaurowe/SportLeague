@@ -1,3 +1,5 @@
+import TablesClasses.Match;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -144,6 +146,6 @@ public class TournamentsMatches extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new TournamentsMatches(1,0, true);
+        new TournamentsMatches(1,0, false);
     }
 }

@@ -94,8 +94,8 @@ class Requests extends JFrame implements ActionListener {
         Dimension windowSize = getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
-        int dx = (centerPoint.x - windowSize.width) / 3;
-        int dy = (centerPoint.y - windowSize.height) / 3;
+        int dx = (centerPoint.x - windowSize.width) / 8;
+        int dy = (centerPoint.y - windowSize.height) / 2;
         setLocation(dx, dy);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);

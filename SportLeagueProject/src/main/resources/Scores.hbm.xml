@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "Scores" table = "punktacjaMeczu">
+    <class name = "TablesClasses.Scores" table = "punktacjaMeczu">
 
         <meta attribute = "class-description">
             This class contains the games details.
