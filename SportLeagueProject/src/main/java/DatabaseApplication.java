@@ -77,7 +77,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerName")) {
             if (args[2] == "1") {
-                Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
+                Query query = session.createQuery("SELECT name FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
@@ -89,7 +89,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerSurname")) {
             if (args[2] == "1") {
-                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
+                Query query = session.createQuery("SELECT surname FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
@@ -101,13 +101,13 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerTeam")) {
             //Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
-            SQLQuery query = session.createSQLQuery("SELECT nazwaDruzyny FROM Druzyna JOIN Zawodnik ON Druzyna.idDruzyny = Zawodnik.idDruzyny");
+            SQLQuery query = session.createSQLQuery("SELECT nazwaDruzyny FROM Druzyna JOIN Zawodnik ON Druzyna.idDruzyny = Zawodnik.idDruzyny ORDER BY Zawodnik.zdobytePunkty");
             query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
             if (args[2] == "1") {
-                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
+                Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
@@ -119,7 +119,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerSex")) {
             if (args[2] == "1") {
-            Query query = session.createQuery("SELECT sex FROM TablesClasses.Player");
+            Query query = session.createQuery("SELECT sex FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }
@@ -131,7 +131,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerBirth")) {
             if (args[2] == "1") {
-            Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
+            Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player ORDER BY scoredPoints");
             query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }
@@ -143,7 +143,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("playerScoredPoints")) {
             if (args[2] == "1") {
-            Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
+            Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player ORDER BY scoredPoints");
             query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }

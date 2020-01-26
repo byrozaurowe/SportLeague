@@ -69,6 +69,7 @@ public class StatisticsLimit extends JFrame implements ActionListener {
                 text[0] = "Statystyki";
                 text[1] = limitNumber;
                 new ButtonList(text);
+                this.dispose();
             }
             catch (NumberFormatException exeption){
                 JOptionPane.showMessageDialog(null, "Wprowadź liczbę", "Brak", JOptionPane.ERROR_MESSAGE);
