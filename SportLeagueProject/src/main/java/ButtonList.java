@@ -76,37 +76,38 @@ public class ButtonList extends JFrame implements ActionListener {
             labelContentList.add(DatabaseApplication.queries(new String[]{"tournamentDivision"}));
         }
         else if (type[0] == "Statystyki") {
+            String limit = type[1];
             headerPane.setLayout(new GridLayout(1, 7));
             headerPane.add(newLabel("Imię"));
-            labelContentList.add(DatabaseApplication.queries(new String[] {"playerName"}));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerName", limit, "1"}));
             headerPane.add(newLabel("Nazwisko"));
-            labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname"}));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname", limit, "1"}));
             headerPane.add(newLabel("Drużyna"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerTeam"}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerTeam", limit, "1"}));
             headerPane.add(newLabel("Numer zawodnika"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber"}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber", limit, "1"}));
             headerPane.add(newLabel("Płeć"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex"}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex", limit, "1"}));
             headerPane.add(newLabel("Rok urodzenia"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth"}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth", limit, "1"}));
             headerPane.add(newLabel("Zdobyte punkty"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints"}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints", limit, "1"}));
         }
         else if (type[0] == "Zawodnicy") {
             String druzyna = DatabaseApplication.queries(new String[] {"getTeamId", type[1]}).get(0).toString();
             headerPane.setLayout(new GridLayout(1, 6));
             headerPane.add(newLabel("Imię"));
-            labelContentList.add(DatabaseApplication.queries(new String[] {"playerName", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerName", druzyna, "2"}));
             headerPane.add(newLabel("Nazwisko"));
-            labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[] {"playerSurname", druzyna, "2"}));
             headerPane.add(newLabel("Numer zawodnika"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerNumber", druzyna, "2"}));
             headerPane.add(newLabel("Płeć"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerSex", druzyna, "2"}));
             headerPane.add(newLabel("Rok urodzenia"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerBirth", druzyna, "2"}));
             headerPane.add(newLabel("Zdobyte punkty"));
-            labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints", druzyna}));
+            labelContentList.add(DatabaseApplication.queries(new String[]{"playerScoredPoints", druzyna, "2"}));
         }
 
         int listSize;
@@ -172,6 +173,10 @@ public class ButtonList extends JFrame implements ActionListener {
                     System.out.println(button.getText());
                     text[1] = button.getText();
                     new ButtonList(text);
+                }
+                if (type[0] == "Turnieje") {
+                    int tournament = Integer.parseInt(DatabaseApplication.queries(new String[] {"getTournamentId", button.getText()}).get(0).toString());
+                    new TournamentsMatches(tournament,0, true);
                 }
             }
         }

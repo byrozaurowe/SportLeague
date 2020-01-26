@@ -70,9 +70,15 @@ class DatabaseApplication {
             Query query = session.createQuery("SELECT division FROM TablesClasses.Tournament");
             return query.list();
         }
+        else if(args[0].equals("getTournamentId")) {
+            Query query = session.createQuery("SELECT tournamentId FROM TablesClasses.Tournament WHERE tournamentName = :tournament");
+            query.setParameter("tournament", args[1]);
+            return query.list();
+        }
         else if(args[0].equals("playerName")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
                 Query query = session.createQuery("SELECT name FROM TablesClasses.Player");
+                query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
             else {
@@ -82,8 +88,9 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerSurname")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
                 Query query = session.createQuery("SELECT surname FROM TablesClasses.Player");
+                query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
             else {
@@ -95,11 +102,13 @@ class DatabaseApplication {
         else if(args[0].equals("playerTeam")) {
             //Query query = session.createQuery("SELECT teamId FROM TablesClasses.Player");
             SQLQuery query = session.createSQLQuery("SELECT nazwaDruzyny FROM Druzyna JOIN Zawodnik ON Druzyna.idDruzyny = Zawodnik.idDruzyny");
+            query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
                 Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player");
+                query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
             }
             else {
@@ -109,8 +118,9 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerSex")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
             Query query = session.createQuery("SELECT sex FROM TablesClasses.Player");
+                query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }
             else {
@@ -120,8 +130,9 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerBirth")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player");
+            query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }
             else {
@@ -131,8 +142,9 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerScoredPoints")) {
-            if (args.length == 1) {
+            if (args[2] == "1") {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player");
+            query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
             }
             else {
@@ -174,7 +186,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("deleteRecentEvent")) {
             try {
-                Query query = session.createSQLQuery("SELECT id FROM punktacjameczu WHERE idMeczu = :idMeczu ORDER BY id DESC LIMIT 1");
+                Query query = session.createSQLQuery("SELECT id FROM punktacjameczu WHERE idMeczu = :idMeczu ORDER BY id DESC TOP 1");
                 query.setParameter("idMeczu", Integer.parseInt(args[1]));
                 result = query.list();
                 query = session.createSQLQuery("DELETE FROM punktacjameczu WHERE id = :id");

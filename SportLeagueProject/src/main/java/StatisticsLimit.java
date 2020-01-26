@@ -64,6 +64,7 @@ public class StatisticsLimit extends JFrame implements ActionListener {
         if (source == menuButton) {
             try {
                 String limitNumber = limitFiled.getText();
+                int limitNumInt = Integer.parseInt(limitNumber);
                 String[] text = new String[2];
                 text[0] = "Statystyki";
                 text[1] = limitNumber;
