@@ -158,11 +158,14 @@ public class AddPlayer extends JFrame implements ActionListener {
                 List result = DatabaseApplication.queries(new String[]{"addPlayer", firstNameField.getText(), nameField.getText(),
                         sexList.getSelectedItem().toString(), birthYearField.getText(), playerNumberField.getText(), teamNameList.getSelectedItem().toString()});
                 if(result.size() > 0) {
-                    if(String.valueOf(result.get(0)).equals("duplicateNumber")) {
-                        JOptionPane.showMessageDialog(this, "Zawodnik o takim numerze już istnieje", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    if(String.valueOf(result.get(0)).equals("wrongNumber")) {
+                        JOptionPane.showMessageDialog(this, "Zawodnik o takim numerze już istnieje!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     }
                     else if (String.valueOf(result.get(0)).equals("wrongAge")) {
-                        JOptionPane.showMessageDialog(this, "Zawodnik jest za młody, by dołączyć do drużyny", "Błąd", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Zawodnik musi mieć 18 lat!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if (String.valueOf(result.get(0)).equals("wrongDivision")) {
+                        JOptionPane.showMessageDialog(this, "Płeć zawodnika nie pasuje do dywizji drużyny!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 else {

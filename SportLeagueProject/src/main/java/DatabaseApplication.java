@@ -5,6 +5,7 @@ import TablesClasses.Tournament;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.exception.GenericJDBCException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,7 +77,7 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerName")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
                 Query query = session.createQuery("SELECT name FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
@@ -88,7 +89,7 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerSurname")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
                 Query query = session.createQuery("SELECT surname FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
@@ -106,7 +107,7 @@ class DatabaseApplication {
             return query.list();
         }
         else if(args[0].equals("playerNumber")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
                 Query query = session.createQuery("SELECT playerNumber FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
                 return query.list();
@@ -118,7 +119,7 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerSex")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
             Query query = session.createQuery("SELECT sex FROM TablesClasses.Player ORDER BY scoredPoints");
                 query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
@@ -130,7 +131,7 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerBirth")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
             Query query = session.createQuery("SELECT birthYear FROM TablesClasses.Player ORDER BY scoredPoints");
             query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
@@ -142,7 +143,7 @@ class DatabaseApplication {
             }
         }
         else if(args[0].equals("playerScoredPoints")) {
-            if (args[2] == "1") {
+            if (args[2].equals("1")) {
             Query query = session.createQuery("SELECT scoredPoints FROM TablesClasses.Player ORDER BY scoredPoints");
             query.setMaxResults(Integer.parseInt(args[1]));
             return query.list();
@@ -224,10 +225,8 @@ class DatabaseApplication {
             }
             catch (NullPointerException e) {
                 System.out.println("Poprawnie dodano punkt");
-                if(result == null) {
-                    result = new ArrayList();
-                    return result;
-                }
+                result = new ArrayList();
+                return result;
             }
         }
         else if(args[0].equals("endMatch")) {
@@ -304,6 +303,7 @@ class DatabaseApplication {
         }
         else if(args[0].equals("requestsFirstNames")) {
             Query query = session.createQuery("SELECT imie FROM TablesClasses.AppUser WHERE czyZatwierdzony = 0 ORDER BY idUzytkownika");
+            query.setMaxResults(2);
             return query.list();
         }
         else if(args[0].equals("requestsNames")) {
@@ -408,10 +408,17 @@ class DatabaseApplication {
             }
             catch (Exception ex) {
                 result = new ArrayList();
-                result.add("wrongAge");
+                if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Wrong team for this player!")) {
+                    result.add("wrongDivision");
+                }
+                else if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Invalid date!")) {
+                    result.add("wrongAge");
+                }
+                else if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Player with this number already exists!")) {
+                    result.add("wrongNumber");
+                }
                 return result;
             }
-            // TODO przerobic exceptiony zeby dzialaly na wiek
         }
         else if(args[0].equals("addTeam")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM TablesClasses.Team");
