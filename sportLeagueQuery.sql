@@ -61,7 +61,6 @@ INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKa
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("BLOW", "Wrocław", 2010, "Mixed", 1);
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("KWR Knury", "Kamieniec Wrocławski", 2012, "Mixed", 1);
 INSERT INTO Druzyna(nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES ("GSH", "Wrocław", 2012, "Open", 1);
-SELECT * FROM druzyna;
 
 CREATE TABLE Turniej (
 idTurnieju int auto_increment primary key not null,
@@ -220,6 +219,33 @@ DECLARE druzynyId INT DEFAULT (SELECT idDruzyny FROM zawodnik WHERE idZawodnika 
     END IF;
 END //
 
+delete from zawodnik where idZawodnika = 0;
+delete from zawodnik where idDruzyny = 0;
+delete from mecz where idDruzynyPierwszej = 0;
+delete from mecz where idDruzynyDrugiej = 0;
+delete from druzyna where idDruzyny = 0;
+INSERT INTO Druzyna(idDruzyny, nazwaDruzyny, miasto, rokZalozenia, dywizja, idUzytkownikaKapitana) VALUES (0, "Usunięta druzyna", "miasto", 0, "Mixed", 1);
+INSERT INTO ZAWODNIK (idZawodnika, idDruzyny, imie, nazwisko, plec, rokUrodzenia, numerZawodnika) values (0, 1, "Usunięty zawodnik", "nazwisko", "Kobieta", 0, 0);
+
+DROP TRIGGER IF EXISTS usuwanieDruzyny;
+DELIMITER //
+CREATE TRIGGER usuwanieDruzyny
+BEFORE delete ON druzyna
+FOR EACH ROW
+BEGIN
+	DELETE from zawodnik WHERE idDruzyny = OLD.idDruzyny;
+    UPDATE mecz SET idDruzynyPierwszej = 0 WHERE idDruzynyPierwszej = OLD.idDruzyny;
+	UPDATE mecz SET idDruzynyDrugiej = 0 WHERE idDruzynyDrugiej = OLD.idDruzyny;   
+END //
+
+DROP TRIGGER IF EXISTS usuwanieZawodnika;
+DELIMITER //
+CREATE TRIGGER usuwanieZawodnika
+BEFORE delete ON zawodnik
+FOR EACH ROW
+BEGIN
+	UPDATE punktacjaMeczu SET idZawodnika = 0 WHERE idZawodnika = OLD.idZawodnika;
+END //
 
 
 INSERT INTO Mecz (idDruzynyPierwszej, idDruzynyDrugiej, punktyDruzynyPierwszej, punktyDruzynyDrugiej, idTurnieju, czyZakonczony) VALUES (1, 2, 0, 0, 1, false);
