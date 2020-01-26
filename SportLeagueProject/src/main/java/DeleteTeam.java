@@ -81,7 +81,8 @@ class DeleteTeam extends JFrame implements ActionListener {
             if(val == JOptionPane.OK_OPTION) {
                 String password = new String(pf.getPassword());
                 if(String.valueOf(DatabaseApplication.queries(new String[]{"checkPassword", password, String.valueOf(userId)}).get(0)).equals("1")) {
-                    // TODO Usuwanie druzyn komenda i triggery
+                    DatabaseApplication.queries(new String[]{"deleteTeam", String.valueOf(DatabaseApplication.queries(new String[]{"teamIdByName", String.valueOf(teamListCombobox.getSelectedItem())}).get(0))});
+                    JOptionPane.showMessageDialog(this, "Drużyna została poprawnie usunięta", "Sukces", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else {
                     JOptionPane.showMessageDialog(null, "Błędne hasło", "Błąd", JOptionPane.ERROR_MESSAGE);
