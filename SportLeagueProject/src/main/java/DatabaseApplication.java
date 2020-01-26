@@ -4,6 +4,8 @@ import TablesClasses.Team;
 import TablesClasses.Tournament;
 import org.apache.log4j.varia.NullAppender;
 import org.hibernate.*;
+import org.hibernate.exception.ConstraintViolationException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -387,9 +389,14 @@ class DatabaseApplication {
                 session.save(player);
                 result = null;
             }
-            catch (Exception e) {
+            catch (ConstraintViolationException e) {
                 result = new ArrayList();
                 result.add("duplicateNumber");
+                return result;
+            }
+            catch (Exception ex) {
+                result = new ArrayList();
+                result.add("wrongAge");
                 return result;
             }
             // TODO przerobic exceptiony zeby dzialaly na wiek

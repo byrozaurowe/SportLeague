@@ -10,6 +10,7 @@ pesel varchar(11),
 poziomUprawnien int not null,
 czyZatwierdzony bool default false not null
 );
+
 DELIMITER //
 CREATE PROCEDURE dodajUzytkownika (login VARCHAR(30), haslo VARCHAR(255), imie VARCHAR(20), nazwisko VARCHAR(20), pesel char(11), poziomUprawnien int)
 BEGIN
@@ -28,6 +29,7 @@ DECLARE pass1, pass2 VARCHAR(255);
     ELSE SELECT 0;
     END IF;
 END //
+
 DELIMITER //
 CREATE PROCEDURE sprawdzHaslo (haslo VARCHAR(255), id int)
 BEGIN
@@ -38,7 +40,9 @@ DECLARE pass1, pass2 VARCHAR(255);
     ELSE SELECT 0;
     END IF;
 END //
+
 INSERT INTO uzytkownikaplikacji (idUzytkownika, login, haslo, poziomUprawnien, czyZatwierdzony) VALUES (1, "admin", sha1('ZAQ!2wsx'), 1, true);
+
 CREATE TABLE Druzyna (
  idDruzyny int auto_increment primary key not null,
  nazwaDruzyny varchar(20) not null,
@@ -94,23 +98,31 @@ idMeczu int not null,
 idZawodnika int not null,
 punktyDruzynyPierwszejPoPunkcie int not null,
 punktyDruzynyDrugiejPoPunkcie int not null,
+idDruzyny int not null,
 foreign key (idMeczu) references Mecz(idMeczu),
-foreign key (idZawodnika) references Zawodnik(idZawodnika)
+foreign key (idZawodnika) references Zawodnik(idZawodnika),
+foreign key (idDruzyny) references Druzyna(idDruzyny)
 );
 
 DELIMITER //
 CREATE PROCEDURE dodajPunkt (meczuId int, druzynyId int, zawodnikaNumer int, czyPierwsza VARCHAR(10))
 BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    ROLLBACK;
+    SELECT 'SQLEXCEPTION';
+END;
+START TRANSACTION;
 	IF czyPierwsza = 'true' THEN
 		UPDATE mecz SET punktyDruzynyPierwszej = punktyDruzynyPierwszej + 1 WHERE idMeczu = meczuId AND idDruzynyPierwszej = druzynyId;
-    END IF;
-    IF czyPierwsza = 'false' THEN
+    ELSEIF czyPierwsza = 'false' THEN
 		UPDATE mecz SET punktyDruzynyDrugiej = punktyDruzynyDrugiej + 1 WHERE idMeczu = meczuId AND idDruzynyDrugiej = druzynyId;
     END IF;
     UPDATE zawodnik SET zdobytePunkty = zdobytePunkty + 1 WHERE idDruzyny = druzynyId AND numerZawodnika = zawodnikaNumer;
-    INSERT INTO punktacjaMeczu (idMeczu, idZawodnika, punktyDruzynyPierwszejPoPunkcie, punktyDruzynyDrugiejPoPunkcie) VALUES (meczuId, 
+    INSERT INTO punktacjaMeczu (idMeczu, idZawodnika, punktyDruzynyPierwszejPoPunkcie, punktyDruzynyDrugiejPoPunkcie, idDruzyny) VALUES (meczuId, 
 		(SELECT idZawodnika FROM Zawodnik WHERE idDruzyny = druzynyId AND numerZawodnika = zawodnikaNumer), 
-		(SELECT punktyDruzynyPierwszej FROM mecz WHERE idMeczu = meczuId), (SELECT punktyDruzynyDrugiej FROM mecz WHERE idMeczu = meczuId));
+		(SELECT punktyDruzynyPierwszej FROM mecz WHERE idMeczu = meczuId), (SELECT punktyDruzynyDrugiej FROM mecz WHERE idMeczu = meczuId), druzynyId);
+COMMIT;
 END //
 
 DELIMITER //
@@ -158,11 +170,18 @@ END //
 
 DROP TRIGGER IF EXISTS usunStatystykiZawodnikaPoUsunieciuPunkta;
 DELIMITER //
-CREATE TRIGGER usunStatystykiZawodnikaPoUsunieciuPunkta
+CREATE TRIGGER poUsunieciuPunkta
 BEFORE DELETE ON punktacjaMeczu
 FOR EACH ROW
 BEGIN
+DECLARE idPierwszej INT DEFAULT (SELECT idDruzynyPierwszej FROM mecz WHERE idMeczu = OLD.idMeczu);
+DECLARE idDrugiej INT DEFAULT (SELECT idDruzynyDrugiej FROM mecz WHERE idMeczu = OLD.idMeczu);
 	UPDATE zawodnik SET zdobytePunkty = zdobytePunkty - 1 WHERE idZawodnika = OLD.idZawodnika;
+    IF idPierwszej = OLD.idDruzyny THEN
+		UPDATE mecz SET punktyDruzynyPierwszej = punktyDruzynyPierwszej - 1 WHERE idMeczu = OLD.idMeczu;
+    ELSEIF idDrugiej = OLD.idDruzyny THEN
+		UPDATE mecz SET punktyDruzynyDrugiej = punktyDruzynyDrugiej - 1 WHERE idMeczu = OLD.idMeczu;
+    END IF;
 END //
 
 INSERT INTO Mecz (idDruzynyPierwszej, idDruzynyDrugiej, punktyDruzynyPierwszej, punktyDruzynyDrugiej, idTurnieju, czyZakonczony) VALUES (1, 2, 0, 0, 1, false);
