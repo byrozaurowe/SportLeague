@@ -178,6 +178,7 @@ class DatabaseApplication {
                 query = session.createSQLQuery("DELETE FROM punktacjameczu WHERE id = :id");
                 query.setParameter("id", Integer.parseInt(result.get(0).toString()));
                 query.executeUpdate();
+                result = null;
             }
             catch (Exception e){
                 result = new ArrayList();
@@ -198,17 +199,21 @@ class DatabaseApplication {
             return result;
         }
         else if(args[0].equals("addScore")) {
+            Query query = session.createSQLQuery("call dodajPunkt(:idMeczu, :idDruzyny, :numerZawodnika, :czyPierwsza)");
+            query.setParameter("idMeczu", Integer.parseInt(args[1]));
+            query.setParameter("idDruzyny", Integer.parseInt(args[2]));
+            query.setParameter("numerZawodnika", Integer.parseInt(args[3]));
+            query.setParameter("czyPierwsza", args[4]);
             try {
-                SQLQuery query = session.createSQLQuery("call dodajPunkt(:idMeczu, :idDruzyny, :numerZawodnika, :czyPierwsza)");
-                query.setParameter("idMeczu", Integer.parseInt(args[1]));
-                query.setParameter("idDruzyny", Integer.parseInt(args[2]));
-                query.setParameter("numerZawodnika", Integer.parseInt(args[3]));
-                query.setParameter("czyPierwsza", args[4]);
-                query.executeUpdate();
+                result = query.list();
+                return result;
             }
-            catch (Exception e) {
-                result = new ArrayList();
-                result.add("wrongNumber");
+            catch (NullPointerException e) {
+                System.out.println("Poprawnie dodano punkt");
+                if(result == null) {
+                    result = new ArrayList();
+                    return result;
+                }
             }
         }
         else if(args[0].equals("endMatch")) {
@@ -363,22 +368,31 @@ class DatabaseApplication {
             return result;
         }
         else if(args[0].equals("addPlayer")) {
-            SQLQuery query = session.createSQLQuery("SELECT idDruzyny FROM druzyna WHERE nazwaDruzyny = :nazwaDruzyny");
-            query.setParameter("nazwaDruzyny", args[6]);
-            result = query.list();
-            int teamId = Integer.parseInt(String.valueOf(result.get(0)));
-            query = session.createSQLQuery("SELECT COUNT(*) FROM zawodnik WHERE idDruzyny = :idDruzyny");
-            query.setParameter("idDruzyny", teamId);
-            result = query.list();
-            Player player = new Player();
-            player.setPlayerId(Integer.parseInt(String.valueOf(result.get(0))));
-            player.setName(args[1]);
-            player.setSurname(args[2]);
-            player.setSex(args[3]);
-            player.setBirthYear(Integer.parseInt(args[4]));
-            player.setPlayerNumber(Integer.parseInt(args[5]));
-            player.setTeamId(teamId);
-            session.save(player);
+            try {
+                SQLQuery query = session.createSQLQuery("SELECT idDruzyny FROM druzyna WHERE nazwaDruzyny = :nazwaDruzyny");
+                query.setParameter("nazwaDruzyny", args[6]);
+                result = query.list();
+                int teamId = Integer.parseInt(String.valueOf(result.get(0)));
+                query = session.createSQLQuery("SELECT COUNT(*) FROM zawodnik WHERE idDruzyny = :idDruzyny");
+                query.setParameter("idDruzyny", teamId);
+                result = query.list();
+                Player player = new Player();
+                player.setPlayerId(Integer.parseInt(String.valueOf(result.get(0))));
+                player.setName(args[1]);
+                player.setSurname(args[2]);
+                player.setSex(args[3]);
+                player.setBirthYear(Integer.parseInt(args[4]));
+                player.setPlayerNumber(Integer.parseInt(args[5]));
+                player.setTeamId(teamId);
+                session.save(player);
+                result = null;
+            }
+            catch (Exception e) {
+                result = new ArrayList();
+                result.add("duplicateNumber");
+                return result;
+            }
+            // TODO przerobic exceptiony zeby dzialaly na wiek
         }
         else if(args[0].equals("addTeam")) {
             Query query = session.createQuery("SELECT COUNT(*) FROM TablesClasses.Team");

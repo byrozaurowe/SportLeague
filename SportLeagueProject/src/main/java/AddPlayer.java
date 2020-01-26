@@ -155,10 +155,20 @@ public class AddPlayer extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Podano nieprawidłowy numer zawodnika!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                JOptionPane.showMessageDialog(this, "Poprawnie dodano zawodnika do drużyny", "Sukces", JOptionPane.INFORMATION_MESSAGE);
-                DatabaseApplication.queries(new String[]{"addPlayer", firstNameField.getText(), nameField.getText(),
+                List result = DatabaseApplication.queries(new String[]{"addPlayer", firstNameField.getText(), nameField.getText(),
                         sexList.getSelectedItem().toString(), birthYearField.getText(), playerNumberField.getText(), teamNameList.getSelectedItem().toString()});
-                this.dispose();
+                if(result.size() > 0) {
+                    if(String.valueOf(result.get(0)).equals("duplicateNumber")) {
+                        JOptionPane.showMessageDialog(this, "Zawodnik o takim numerze już istnieje", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if (String.valueOf(result.get(0)).equals("wrongAge")) {
+                        JOptionPane.showMessageDialog(this, "Zawodnik jest za młody, by dołączyć do drużyny", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Poprawnie dodano zawodnika do drużyny", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                }
             }
         }
     }

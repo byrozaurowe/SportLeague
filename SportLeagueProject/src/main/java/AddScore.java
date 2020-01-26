@@ -24,6 +24,8 @@ class AddScore extends JFrame implements ActionListener {
     /** Przycisk cofniecia ostatniego ruchu */
     private JButton deleteRecentEventButton;
 
+    List teamsInMatch;
+
     /** Kostrukor okna
      * @param matchId Id uzytkownika ktory otwiera to okno
      */
@@ -35,7 +37,7 @@ class AddScore extends JFrame implements ActionListener {
         setLayout(new GridLayout(2,1,10,10));
         setTitle("Dodaj punkt");
         Font font = new Font("Segoe UI", Font.PLAIN, 20);
-        List teamsInMatch = DatabaseApplication.queries(new String [] {"getMatchById", String.valueOf(matchId)});
+        teamsInMatch = DatabaseApplication.queries(new String [] {"getMatchById", String.valueOf(matchId)});
         ArrayList<String> teamsNames = new ArrayList<String>();
         teamsNames.add(String.valueOf(DatabaseApplication.queries(new String [] {"getTeamNameById", String.valueOf(((Match) teamsInMatch.get(0)).getIdDruzynyPierwszej())}).get(0)));
         teamsNames.add(String.valueOf(DatabaseApplication.queries(new String [] {"getTeamNameById", String.valueOf(((Match) teamsInMatch.get(0)).getIdDruzynyDrugiej())}).get(0)));
@@ -84,25 +86,26 @@ class AddScore extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Object event = actionEvent.getSource();
         if(event == addScoreButton) {
+            boolean isFirstTeam = false;
+            if(teamBox.getSelectedItem() == teamBox.getItemAt(0)) {
+                isFirstTeam = true;
+            }
             try {
                 Integer.parseInt(playerNumberField.getText());
             }
             catch(NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Numer zawodnika powinien być liczbą!", "Błąd", JOptionPane.ERROR_MESSAGE);
             }
-            boolean isFirstTeam = false;
-            if(teamBox.getSelectedItem() == teamBox.getItemAt(0)) {
-                isFirstTeam = true;
-            }
             List result = DatabaseApplication.queries(new String[] {"addScore", String.valueOf(matchId),
                     String.valueOf(DatabaseApplication.queries(new String[]{"getTeamId", String.valueOf(teamBox.getSelectedItem())}).get(0)),
                     playerNumberField.getText(), String.valueOf(isFirstTeam)});
-            if(result.size() != 0) {
-                if(result.get(0).equals("wrongNumber")) {
+            if(result.size() > 0) {
+                if (String.valueOf(result.get(0)).equals("SQLEXCEPTION")) {
                     JOptionPane.showMessageDialog(null, "Błędny numer zawodnika!", "Błąd", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
+                JOptionPane.showMessageDialog(null, "Poprawnie dodano punkt", "Sukces", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }
