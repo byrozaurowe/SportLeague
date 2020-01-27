@@ -3,6 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JFileChooser;
 
 public class Menu extends JFrame implements ActionListener {
     private int permissionLevel;
@@ -44,6 +48,8 @@ public class Menu extends JFrame implements ActionListener {
             menuComboBoxList.add("Moje turnieje");
             menuComboBoxList.add("Usuń drużynę");
             menuComboBoxList.add("Prośby użytkowników");
+            menuComboBoxList.add("Zrób backup");
+            menuComboBoxList.add("Wczytaj backup");
             menuComboBoxList.add("Wyloguj się");
         }
         else if (permissionLevel == 2) {
@@ -138,10 +144,13 @@ public class Menu extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
-            else if(comboBoxSource == "Wyloguj się" || comboBoxSource == "Zaloguj się") {
-                new Logging();
-                this.dispose();
+            else if (comboBoxSource == "Zrób backup") {
+                BackUpAndRestore.Backupdbtosql();
             }
+            else if (comboBoxSource == "Wczytaj backup") {
+                //BackUpAndRestore.Restoredbfromsql();
+            }
+
         }
     }
 }
