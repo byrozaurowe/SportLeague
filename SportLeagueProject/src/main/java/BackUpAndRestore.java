@@ -32,7 +32,7 @@ class BackUpAndRestore {
             String savePath = "\"" + jarDir + "\\backup\\" + "backup.sql\"";
 
             /*NOTE: Used to create a cmd command*/
-            String executeCmd = "C:\\Program Files\\MySQL\\MySQL Workbench 8.0 CE\\mysqldump -u" + dbUser + " -p" + dbPass + " --database " + dbName + " -r " + savePath;
+            String executeCmd = "C:\\Program Files\\MySQL\\MySQL Workbench 8.0 CE\\mysqldump -u" + dbUser + " -p" + dbPass + " " + dbName + " -r " + savePath;
 
             /*NOTE: Executing the command here*/
             Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
