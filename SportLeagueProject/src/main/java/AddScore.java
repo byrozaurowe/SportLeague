@@ -94,27 +94,28 @@ class AddScore extends JFrame implements ActionListener {
                 Integer.parseInt(playerNumberField.getText());
             }
             catch(NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Numer zawodnika powinien być liczbą!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Numer zawodnika powinien być liczbą!", "Błąd", JOptionPane.ERROR_MESSAGE);
             }
             List result = DatabaseApplication.queries(new String[] {"addScore", String.valueOf(matchId),
                     String.valueOf(DatabaseApplication.queries(new String[]{"getTeamId", String.valueOf(teamBox.getSelectedItem())}).get(0)),
                     playerNumberField.getText(), String.valueOf(isFirstTeam)});
             if(result.size() > 0) {
                 if (String.valueOf(result.get(0)).equals("SQLEXCEPTION")) {
-                    JOptionPane.showMessageDialog(null, "Błędny numer zawodnika!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Błędny numer zawodnika!", "Błąd", JOptionPane.ERROR_MESSAGE);
                 }
             }
             else {
-                JOptionPane.showMessageDialog(null, "Poprawnie dodano punkt", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Poprawnie dodano punkt", "Sukces", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }
         else if(event == endMatchButton) {
             if(DatabaseApplication.queries(new String[]{"endMatch", String.valueOf(matchId)}).size() > 0) {
-                JOptionPane.showMessageDialog(null, "Coś poszło nie tak, spróbuj ponownie", "Błąd", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Coś poszło nie tak, spróbuj ponownie", "Błąd", JOptionPane.ERROR_MESSAGE);
             }
             else {
-                JOptionPane.showMessageDialog(null, "Mecz został zakończony", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mecz został zakończony", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
             }
         }
         else if(event == deleteRecentEventButton) {
