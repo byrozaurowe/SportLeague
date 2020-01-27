@@ -167,6 +167,9 @@ public class AddPlayer extends JFrame implements ActionListener {
                     else if (String.valueOf(result.get(0)).equals("wrongDivision")) {
                         JOptionPane.showMessageDialog(this, "Płeć zawodnika nie pasuje do dywizji drużyny!", "Błąd", JOptionPane.ERROR_MESSAGE);
                     }
+                    else if (String.valueOf(result.get(0)).equals("smthWentWrong")) {
+                        JOptionPane.showMessageDialog(this, "Coś poszło nie tak. Sprawdź, czy podany numer zawodnika nie jest zajęty, zawodnik ma przynajmniej 18 lat i czy jego płeć pasuje do dywizji drużyny", "Błąd", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else {
                     JOptionPane.showMessageDialog(this, "Poprawnie dodano zawodnika do drużyny", "Sukces", JOptionPane.INFORMATION_MESSAGE);

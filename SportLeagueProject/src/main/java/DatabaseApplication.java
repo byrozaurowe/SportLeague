@@ -392,12 +392,11 @@ class DatabaseApplication {
         }
         else if(args[0].equals("addPlayer")) {
             try {
-                SQLQuery query = session.createSQLQuery("SELECT idDruzyny FROM druzyna WHERE nazwaDruzyny = :nazwaDruzyny AND idDruzyny <> 1");
+                SQLQuery query = session.createSQLQuery("SELECT idDruzyny FROM druzyna WHERE nazwaDruzyny = :nazwaDruzyny");
                 query.setParameter("nazwaDruzyny", args[6]);
                 result = query.list();
                 int teamId = Integer.parseInt(String.valueOf(result.get(0)));
                 query = session.createSQLQuery("SELECT COUNT(*) FROM zawodnik");
-                query.setParameter("idDruzyny", teamId);
                 result = query.list();
                 Player player = new Player();
                 player.setPlayerId(Integer.parseInt(String.valueOf(result.get(0))));
@@ -412,19 +411,26 @@ class DatabaseApplication {
             }
             catch (ConstraintViolationException e) {
                 result = new ArrayList();
-                result.add("duplicateNumber");
+                result.add("wrongNumber");
                 return result;
             }
             catch (Exception ex) {
                 result = new ArrayList();
-                if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Wrong team for this player!")) {
-                    result.add("wrongDivision");
+                if (ex instanceof GenericJDBCException) {
+                    if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Wrong team for this player!")) {
+                        result.add("wrongDivision");
+                    }
+                    else {
+                        if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Invalid date!")) {
+                            result.add("wrongAge");
+                        }
+                        else if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Player with this number already exists!")) {
+                            result.add("wrongNumber");
+                        }
+                    }
                 }
-                else if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Invalid date!")) {
-                    result.add("wrongAge");
-                }
-                else if(String.valueOf(((GenericJDBCException) ex).getSQLException()).equals("java.sql.SQLException: Player with this number already exists!")) {
-                    result.add("wrongNumber");
+                else {
+                    result.add("smthWentWrong");
                 }
                 return result;
             }

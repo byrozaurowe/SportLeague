@@ -124,8 +124,4 @@ public class AddTournament extends JFrame implements ActionListener {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new AddTournament(1);
-    }
 }

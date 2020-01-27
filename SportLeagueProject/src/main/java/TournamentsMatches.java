@@ -144,8 +144,4 @@ public class TournamentsMatches extends JFrame implements ActionListener {
             }
         }
     }
-
-    public static void main(String[] args) {
-        new TournamentsMatches(1,0, false);
-    }
 }

@@ -68,7 +68,7 @@ class BackUpAndRestore {
 
             /*NOTE: Used to create a cmd command*/
             /*NOTE: Do not create a single large string, this will cause buffer locking, use string array*/
-            String[] executeCmd = new String[]{"mysql", dbName, "-u" + dbUser, "-p" + dbPass, "-e", " source " + restorePath};
+            String[] executeCmd = new String[]{"C:\\Program Files\\MySQL\\MySQL Workbench 8.0 CE\\mysql", dbName, "-u" + dbUser, "-p" + dbPass, "-e", " source " + restorePath};
 
             /*NOTE: processComplete=0 if correctly executed, will contain other values if not*/
             Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);

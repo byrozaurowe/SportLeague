@@ -96,10 +96,6 @@ public class Menu extends JFrame implements ActionListener {
         pack();
     }
 
-    public static void main(String[] args) {
-        new Menu(1,1);
-    }
-
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuButton) {
@@ -127,7 +123,7 @@ public class Menu extends JFrame implements ActionListener {
                     new AddPlayer(userId);
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "Nie posiadasz żadnych drużyn, żeby dodać zawodnika", "Brak", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Nie posiadasz żadnych drużyn, żeby dodać zawodnika", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             else if (comboBoxSource == "Dodaj turniej") {
@@ -141,16 +137,23 @@ public class Menu extends JFrame implements ActionListener {
                     new Requests();
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Nie ma żadnych próśb o autoryzacje", "Brak", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             else if (comboBoxSource == "Zrób backup") {
                 BackUpAndRestore.Backupdbtosql();
             }
             else if (comboBoxSource == "Wczytaj backup") {
-                //BackUpAndRestore.Restoredbfromsql();
+                BackUpAndRestore.Restoredbfromsql("backup.sql");
             }
-
+            else if (comboBoxSource == "Wyloguj się") {
+                new Logging();
+                this.dispose();
+            }
+            else if (comboBoxSource == "Zaloguj się") {
+                new Logging();
+                this.dispose();
+            }
         }
     }
 }

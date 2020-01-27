@@ -54,11 +54,6 @@ public class StatisticsLimit extends JFrame implements ActionListener {
 
         pack();
     }
-
-    public static void main(String[] args) {
-        new StatisticsLimit();
-    }
-
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuButton) {
